@@ -14,9 +14,6 @@ describe('isExpenseValid', () => {
 });
 
 describe('isExpenseNotValid', () => {
-    beforeEach(() => {
-        let errorMessage = "";
-    });
     test('invalid playerId', () => {
         const invalidPlayerIdMockedExpense: Expense = {
             payerId: 0,

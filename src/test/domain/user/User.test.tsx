@@ -12,9 +12,6 @@ describe('isUserValid', () => {
 });
 
 describe('isUserNotValid', () => {
-    beforeEach(() => {
-        let errorMessage = "";
-    });
     test('empty name', () => {
         const invalidNameMockedUser: User = {
             id: 1,

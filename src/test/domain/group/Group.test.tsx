@@ -12,9 +12,6 @@ describe('isGroupValid', () => {
 });
 
 describe('isGroupNotValid', () => {
-    beforeEach(() => {
-        let errorMessage = "";
-    });
     test('members list has duplicate ids', () => {
         const invalidUser1: User = {
             id: 1,
