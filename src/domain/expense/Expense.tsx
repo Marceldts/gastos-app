@@ -4,8 +4,8 @@ import { isDescriptionValid } from "./ExpenseDescription";
 import { isPayerIdValid } from "./ExpensePayerId";
 
 export interface Expense {
-    payerId: number,
-    amount: number,
+    readonly payerId: number,
+    readonly amount: number,
     description: String,
     date: String
 }
