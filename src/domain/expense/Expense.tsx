@@ -6,8 +6,8 @@ import { isPayerIdValid } from "./ExpensePayerId";
 export interface Expense {
     readonly payerId: number,
     readonly amount: number,
-    description: String,
-    date: String
+    description: string,
+    date: string
 }
 
 export const isExpenseValid = ({ payerId, amount, description, date }: Expense): boolean => {

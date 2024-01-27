@@ -1,3 +1,3 @@
-export const isDescriptionValid = (description: String): boolean => {
+export const isDescriptionValid = (description: string): boolean => {
     return description.trim().length > 0;
 }
