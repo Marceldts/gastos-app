@@ -7,6 +7,9 @@ export const localStorageGroupRepository: GroupRepository = {
     getGroup: function (): Promise<Group | undefined> {
         throw new Error("Function not implemented.");
     },
+    saveGroup: function (group: Group): Promise<void> {
+        throw new Error("Function not implemented.");
+    },
     addExpense: function (group: Group, expense: Expense): Promise<void> {
         throw new Error("Function not implemented.");
     },
