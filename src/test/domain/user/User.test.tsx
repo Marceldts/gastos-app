@@ -30,4 +30,8 @@ describe('isUserNotValid', () => {
         mockedUser.name = "           ";
         expect(() => isUserValid(mockedUser)).toThrow("\nName is not valid.\n");
     });
+    test('name cannot be longer than 50 characters trimmed', () => {
+        mockedUser.name = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+        expect(() => isUserValid(mockedUser)).toThrow("\nName is not valid.\n");
+    });
 });
