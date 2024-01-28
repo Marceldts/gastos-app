@@ -50,6 +50,15 @@ describe('expense is not valid', () => {
         };
         expect(() => isExpenseValid(invalidDescriptionMockedExpense)).toThrow("\nDescription is not valid.\n");
     });
+    test('description cannot be longer than 50 characters trimmed', () => {
+        const invalidDescriptionMockedExpense: Expense = {
+            payerId: 1,
+            amount: 100,
+            description: '     aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+            date: '2022-01-28',
+        };
+        expect(() => isExpenseValid(invalidDescriptionMockedExpense)).toThrow("\nDescription is not valid.\n");
+    });
     test('expense date cannot be after the day that is added', () => {
         const invalidDateMockedExpense: Expense = {
             payerId: 1,
