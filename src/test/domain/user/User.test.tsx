@@ -12,20 +12,22 @@ describe('isUserValid', () => {
 });
 
 describe('isUserNotValid', () => {
-    test('empty name', () => {
-        const invalidNameMockedUser: User = {
+    let mockedUser: User;
+
+    beforeEach(() => {
+        mockedUser = {
             id: 1,
-            name: "",
+            name: "Test user",
             balance: 0
         };
-        expect(() => isUserValid(invalidNameMockedUser)).toThrow("\nName is not valid.\n");
+    });
+
+    test('empty name', () => {
+        mockedUser.name = "";
+        expect(() => isUserValid(mockedUser)).toThrow("\nName is not valid.\n");
     });
     test('name cannot be white spaces', () => {
-        const invalidNameMockedUser: User = {
-            id: 1,
-            name: "     ",
-            balance: 0
-        };
-        expect(() => isUserValid(invalidNameMockedUser)).toThrow("\nName is not valid.\n");
+        mockedUser.name = "           ";
+        expect(() => isUserValid(mockedUser)).toThrow("\nName is not valid.\n");
     });
 });
