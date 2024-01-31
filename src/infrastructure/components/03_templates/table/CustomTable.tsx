@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { CustomTableHeader } from "../../01_molecules/table-header/CustomTableHeader";
 import { CustomTableBody } from "../../02_organisms/table-body/CustomTableBody";
+import './CustomTable.css';
 
 export const CustomTable = (props: { data: any; }) => {
     const { data } = props;
@@ -13,11 +14,9 @@ export const CustomTable = (props: { data: any; }) => {
     }, []);
 
     return (
-        <>
+        <table>
             <CustomTableHeader headerText={header.text} buttons={header.buttons} />
-            <table>
-                <CustomTableBody data={body} />
-            </table>
-        </>
+            <CustomTableBody data={body} />
+        </table>
     );
 }
