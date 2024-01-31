@@ -1,7 +1,7 @@
 import { User } from "domain/user/User";
 import { Group } from "domain/group/Group";
 import { GroupRepository } from "domain/group/Group.repository";
-import { localStorageGroupRepository } from "infrastructure/group/LocalStorageGroup.repository";
+import { localStorageGroupRepository } from "infrastructure/repositories/group/LocalStorageGroup.repository";
 
 describe('local storage group repository implementation', () => {
     let repository: GroupRepository;
