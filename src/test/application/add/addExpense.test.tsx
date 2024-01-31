@@ -1,6 +1,6 @@
 import { Expense } from "domain/expense/Expense";
 import { User } from "domain/user/User";
-import { addExpense } from "application/add/add-expense";
+import { addExpense } from "application/add/addExpense";
 import { groupRepositoryMock } from "test/mocks/groupRepository.mock";
 
 describe('Add Expense', () => {

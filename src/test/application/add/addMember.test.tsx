@@ -1,7 +1,7 @@
 import { User } from "domain/user/User";
 import { Group } from "domain/group/Group";
 import { groupRepositoryMock } from "test/mocks/groupRepository.mock";
-import { addMember } from "application/add/add-member";
+import { addMember } from "application/add/addMember";
 
 describe('Add member', () => {
 
