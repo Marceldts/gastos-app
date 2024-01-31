@@ -1,11 +1,11 @@
-import { Expense, isExpenseValid } from "domain/expense/Expense";
 import { Group } from "domain/group/Group";
 import { GroupRepository } from "domain/group/Group.repository";
+import { User, isUserValid } from "domain/user/User";
 
-export const addExpense = async (groupRepository: GroupRepository, group: Group, expense: Expense): Promise<void> => {
+export const addMember = async (groupRepository: GroupRepository, group: Group, member: User): Promise<void> => {
     try {
-        if (isExpenseValid(expense)) {
-            groupRepository.addExpense(group, expense);
+        if (isUserValid(member)) {
+            groupRepository.addMember(group, member);
             await groupRepository.saveGroup(group);
         }
         return Promise.resolve();
