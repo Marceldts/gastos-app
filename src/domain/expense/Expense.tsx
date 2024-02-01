@@ -5,6 +5,7 @@ import { isPayerIdValid } from "./ExpensePayerId";
 
 export interface Expense {
     readonly payerId: number,
+    readonly payerName: string,
     readonly amount: number,
     description: string,
     date: string

@@ -66,7 +66,7 @@ describe('local storage group repository implementation', () => {
         test('saveGroup should save the group in local storage', async () => {
 
             const groupToSave: Group = {
-                expenseList: new Set([{ payerId: 1, amount: 100, description: 'Test expense', date: '2022-01-28' }]),
+                expenseList: new Set([{ payerId: 1, payerName: "Test", amount: 100, description: 'Test expense', date: '2022-01-28' }]),
                 members: new Set([{ name: 'Test user', balance: 0, id: 1 }]),
             };
 
@@ -106,7 +106,7 @@ describe('local storage group repository implementation', () => {
                 expenseList: new Set(),
                 members: new Set([{ name: 'Test user', balance: 0, id: 1 }]),
             };
-            const expense = { payerId: 1, amount: 100, description: 'Test expense', date: '2022-01-28' };
+            const expense = { payerId: 1, payerName: "Test", amount: 100, description: 'Test expense', date: '2022-01-28' };
 
             saveGroupMock.mockResolvedValueOnce(() => { });
 
@@ -124,7 +124,7 @@ describe('local storage group repository implementation', () => {
             await expect(localStorageGroupRepository.addExpense({
                 expenseList: new Set(),
                 members: new Set(),
-            }, { payerId: 1, amount: 100, description: 'Test expense', date: '2022-01-28' })).rejects.toThrow(mockedError);
+            }, { payerId: 1, payerName: "Test", amount: 100, description: 'Test expense', date: '2022-01-28' })).rejects.toThrow(mockedError);
         });
     });
 

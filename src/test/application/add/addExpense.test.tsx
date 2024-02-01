@@ -13,6 +13,7 @@ describe('Add Expense', () => {
         const group = { members: new Set<User>(), expenseList: new Set<Expense>() };
         const validMockedExpense: Expense = {
             payerId: 1,
+            payerName: 'Test user',
             amount: 100,
             description: 'Test expense',
             date: '2022-01-28',
@@ -32,6 +33,7 @@ describe('Add Expense', () => {
         const group = { members: new Set<User>(), expenseList: new Set<Expense>() };
         const invalidMockedExpense: Expense = {
             payerId: 0,
+            payerName: 'Test user',
             amount: 100,
             description: 'Test expense',
             date: '2022-01-28',

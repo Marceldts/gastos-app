@@ -31,7 +31,7 @@ describe('isGroupNotValid', () => {
     });
     test('cannot have expenses without members', () => {
         const invalidMockedGroup: Group = {
-            expenseList: new Set([{ payerId: 1, amount: 100, description: 'Test expense', date: '2022-01-28' }]),
+            expenseList: new Set([{ payerId: 1, payerName: "Test", amount: 100, description: 'Test expense', date: '2022-01-28' }]),
             members: new Set()
         };
         expect(() => isGroupValid(invalidMockedGroup)).toThrow("\nCannot have expenses without members.\n");

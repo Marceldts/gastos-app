@@ -4,6 +4,7 @@ describe('expense is valid', () => {
     test('valid expense', () => {
         const validMockedExpense: Expense = {
             payerId: 1,
+            payerName: 'Test user',
             amount: 100,
             description: 'Test expense',
             date: '2022-01-28',
@@ -20,6 +21,7 @@ describe('expense is not valid', () => {
     beforeEach(() => {
         mockedExpense = {
             payerId: 1,
+            payerName: 'Test user',
             amount: 100,
             description: 'Test expense',
             date: '2022-01-28',
@@ -33,7 +35,6 @@ describe('expense is not valid', () => {
         };
         expect(() => isExpenseValid(modifiedMockedExpense)).toThrow("\nPayer id is not valid.\n");
     });
-
     test('expense amount cannot be 0 or less', () => {
         const invalidAmountMockedExpense = {
             ...mockedExpense,
@@ -73,9 +74,10 @@ describe('expense is not valid', () => {
         });
     })
 
-    test('invalid playerId, amount, description, date', () => {
+    test('invalid playerId, payerName, amount, description, date', () => {
         const invalidAllMockedExpense: Expense = {
             payerId: 0,
+            payerName: '',
             amount: 0,
             description: '',
             date: '33333333-001-0032',
