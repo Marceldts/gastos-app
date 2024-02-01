@@ -17,7 +17,7 @@ export const CustomTableHeader = (props: CustomTableHeaderProps) => {
                 <th colSpan={2} className={`custom-table-header ${className ?? ''}`}>
                     <Title text={headerText} />
                 </th>
-                <th colSpan={1} role="table-header-buttons">
+                <th colSpan={2} role="table-header-buttons">
                     <section>
                         {buttons.map((button, index) => <CustomButton key={index} text={button.text} onPress={button.onPress} />)}
                     </section>

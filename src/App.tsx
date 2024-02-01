@@ -5,6 +5,7 @@ import { getGroup } from 'application/get/getGroup';
 import { GroupRepository } from 'domain/group/Group.repository';
 import { localStorageGroupRepository } from 'infrastructure/repositories/group/LocalStorageGroup.repository';
 import './App.css';
+import { addExpense } from 'application/add/addExpense';
 
 function App() {
   const [groupData, setGroupData] = useState({} as Group);
@@ -29,6 +30,13 @@ function App() {
 
   useEffect(() => {
     getGroup(repository).then((storedGroup) => {
+      addExpense(repository, storedGroup!, {
+        payerId: 1,
+        payerName: 'Test user',
+        amount: 100,
+        description: 'Test expense',
+        date: '2022-01-28',
+      });
       setGroupData(storedGroup!);
     });
   }, []);
@@ -38,7 +46,7 @@ function App() {
       const expenseList = Array.from(groupData.expenseList ?? []);
       const updatedTableData = {
         ...tableData,
-        body: expenseList.map((expense) => [expense.payerId, expense.amount, expense.date]),
+        body: expenseList.map((expense) => [expense.payerName, expense.description, expense.amount, expense.date]),
       };
       setTableData(updatedTableData);
     }
