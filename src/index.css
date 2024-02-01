@@ -25,7 +25,8 @@ code {
   --color-table-row-accent: #ffd5d5;
   --color-table-row-hover: #f5f5f5;
   --color-table-row-hover-accent: #ffe5e5;
+  --color-table-border: #ddd;
 
-  --color-button-hover: #2ecc71;
+  --color-button-hover: #17753e;
   --color-button-hover-text: #fff;
 }

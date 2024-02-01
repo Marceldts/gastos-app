@@ -1,22 +1,21 @@
-import { useEffect } from "react";
 import { CustomTableHeader } from "../../01_molecules/table-header/CustomTableHeader";
 import { CustomTableBody } from "../../02_organisms/table-body/CustomTableBody";
 import './CustomTable.css';
 
-export const CustomTable = (props: { data: any; }) => {
-    const { data } = props;
+interface CustomTableProps {
+    data?: any;
+    className?: string;
+    bodyClassName?: string;
+}
+
+export const CustomTable = (props: CustomTableProps) => {
+    const { data, className, bodyClassName } = props;
     const { header, body } = data;
 
-    useEffect(() => {
-        // console.log("data", data);
-        // console.log("header", header);
-        // console.log("body", body);
-    }, []);
-
     return (
-        <table>
+        <table className={`group-table ${className ?? ""}`}>
             <CustomTableHeader headerText={header.text} buttons={header.buttons} />
-            <CustomTableBody data={body} />
+            {body && <CustomTableBody className={bodyClassName} data={body} />}
         </table>
     );
 }

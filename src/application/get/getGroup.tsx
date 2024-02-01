@@ -1,5 +1,5 @@
-import { Group } from "@domain/group/Group";
-import { GroupRepository } from "@domain/group/Group.repository";
+import { Group } from "domain/group/Group";
+import { GroupRepository } from "domain/group/Group.repository";
 
 /**
  * Gets a group

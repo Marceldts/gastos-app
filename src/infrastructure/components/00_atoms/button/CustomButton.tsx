@@ -1,9 +1,15 @@
 import './CustomButton.css';
 
-export const CustomButton = (props: { text: any; onPress: any; }) => {
-    const { text, onPress } = props;
+interface CustomButtonProps {
+    text: string;
+    onPress: (args?: any) => void;
+    className?: string;
+}
+
+export const CustomButton = (props: CustomButtonProps) => {
+    const { text, onPress, className } = props;
 
     return (
-        <button className='custom-button' onClick={onPress}>{text}</button>
+        <button className={`custom-button ${className ?? ''}`} onClick={onPress}>{text}</button>
     );
 }

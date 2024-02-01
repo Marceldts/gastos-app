@@ -1,6 +1,6 @@
 import { Expense } from "domain/expense/Expense";
 import { Group } from "./Group";
-import { User } from "@domain/user/User";
+import { User } from "domain/user/User";
 
 export interface GroupRepository {
     getGroup(): Promise<Group | undefined>;

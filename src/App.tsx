@@ -1,24 +1,53 @@
 import { CustomTable } from 'infrastructure/components/03_templates/table/CustomTable';
+import { useEffect, useState } from 'react';
+import { Group } from 'domain/group/Group';
+import { getGroup } from 'application/get/getGroup';
+import { GroupRepository } from 'domain/group/Group.repository';
+import { localStorageGroupRepository } from 'infrastructure/repositories/group/LocalStorageGroup.repository';
 import './App.css';
 
 function App() {
-  const mockData = {
+  const [groupData, setGroupData] = useState({} as Group);
+  const [tableData, setTableData] = useState<{
     header: {
-      text: 'Sample Header',
+      text: string;
+      buttons: { text: string; onPress: () => void }[];
+    };
+    body: (string | number)[][];
+  }>({
+    header: {
+      text: 'Gastos',
       buttons: [
-        { text: 'Button 1', onPress: () => console.log('Button 1 clicked') },
-        { text: 'Button 2', onPress: () => console.log('Button 2 clicked') },
+        { text: 'Añadir gasto', onPress: () => console.log('Button 1 clicked') },
+        { text: 'Añadir miembro al grupo', onPress: () => console.log('Button 2 clicked') },
       ],
     },
-    body: [
-      ['John Doe', 30, 'Male'],
-      ['Jane Smith', 25, 'Female'],
-      // Add more rows as needed
-    ],
-  };
+    body: [],
+  });
+
+  const repository: GroupRepository = localStorageGroupRepository;
+
+  useEffect(() => {
+    getGroup(repository).then((storedGroup) => {
+      setGroupData(storedGroup!);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (groupData.expenseList?.size !== 0) {
+      const expenseList = Array.from(groupData.expenseList ?? []);
+      const updatedTableData = {
+        ...tableData,
+        body: expenseList.map((expense) => [expense.payerId, expense.amount, expense.date]),
+      };
+      setTableData(updatedTableData);
+    }
+  }, [groupData]);
+
   return (
     <div className="App">
-      <CustomTable data={mockData} />
+      {tableData.body.length > 0 && <CustomTable className="group-table" data={tableData} />}
+      {tableData.body.length === 0 && <p>No hay gastos</p>}
     </div>
   );
 }

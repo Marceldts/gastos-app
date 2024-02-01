@@ -1,5 +1,9 @@
 .custom-table-header {
-  display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 55%;
+}
+
+th {
+  display: table-cell;
 }

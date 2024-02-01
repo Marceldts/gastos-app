@@ -1,11 +1,16 @@
 import { CustomTableRow } from "../../01_molecules/table-row/CustomTableRow";
 
-export const CustomTableBody = (props: { data: any[]; }) => {
-    const { data } = props;
+interface CustomTableBodyProps {
+    data: any[];
+    className?: string;
+}
+
+export const CustomTableBody = (props: CustomTableBodyProps) => {
+    const { data, className } = props;
 
     return (
-        <tbody>
-            {data.map((row, index) => <CustomTableRow key={index} data={row} />)}
+        <tbody className={className}>
+            {data?.map((row, index) => <CustomTableRow key={index} data={row} />)}
         </tbody>
     );
 }
