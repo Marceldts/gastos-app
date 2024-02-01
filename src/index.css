@@ -29,4 +29,7 @@ code {
 
   --color-button-hover: #17753e;
   --color-button-hover-text: #fff;
+
+  --color-form-border: #ccc;
+  --color-form-background: #f5f5f5;
 }

@@ -46,3 +46,102 @@
   background-color: var(--color-button-hover);
   color: var(--color-button-hover-text);
 }
+
+.expense-form {
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid var(--color-form-border);
+  border-radius: 8px;
+  background-color: var(--color-form-background);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.expense-form h3 {
+  margin-top: 0;
+}
+
+.expense-form label {
+  display: block;
+  margin-top: 10px;
+}
+
+.expense-form input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  box-sizing: border-box;
+}
+
+.expense-form button {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.expense-form button:hover {
+  background-color: #45a049;
+}
+
+.expense-form-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.user-form {
+  background-color: var(--color-form-background);
+  border: 1px solid var(--color-form-border);
+  padding: 20px;
+  margin: 20px;
+  width: 300px;
+  border-radius: 5px;
+}
+
+.user-form h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.user-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.user-form input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+  border: 1px solid var(--color-form-border);
+  border-radius: 3px;
+}
+
+.user-form-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.user-form-buttons button {
+  background-color: #4caf50;
+  color: var(--color-text-light);
+  padding: 8px 16px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.user-form-buttons button:nth-child(2) {
+  background-color: #d9534f;
+}
+
+.forms {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
