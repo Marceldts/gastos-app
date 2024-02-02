@@ -67,6 +67,7 @@ function App() {
   useEffect(() => {
     const getGroupWhenInit = async (repository: GroupRepository) => {
       const group = await getGroup(repository);
+      setBalance(await getGroupBalance(localStorageGroupRepository, group!));
       setGroupData(group?.expenseList?.size == 0 && group.members.size == 0 ? testGroup : group!);
       await saveGroup(repository, group?.expenseList?.size == 0 && group.members.size == 0 ? testGroup : group!);
       return group;

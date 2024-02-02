@@ -183,3 +183,7 @@ table {
 .negative-number {
   color: var(--color-negative-balance);
 }
+
+.balance {
+  margin: auto;
+}
