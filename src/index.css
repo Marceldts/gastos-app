@@ -32,4 +32,7 @@ code {
 
   --color-form-border: #ccc;
   --color-form-background: #f5f5f5;
+
+  --color-positive-balance: #2ecc71;
+  --color-negative-balance: #e74c3c;
 }

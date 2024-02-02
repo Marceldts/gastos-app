@@ -4,6 +4,7 @@ import { User, isUserValid } from "domain/user/User";
 
 export const addMember = async (groupRepository: GroupRepository, group: Group, member: User): Promise<void> => {
     try {
+        console.log("ADD MEMBER GROUP: ", group)
         if (isUserValid(member)) {
             groupRepository.addMember(group, member);
             await groupRepository.saveGroup(group);

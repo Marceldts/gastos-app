@@ -1,3 +1,4 @@
+import { Debt } from "domain/debt/Debt";
 import { Expense } from "domain/expense/Expense";
 import { Group, isGroupValid } from "domain/group/Group";
 import { GroupRepository } from "domain/group/Group.repository";
@@ -9,9 +10,12 @@ export const localStorageGroupRepository: GroupRepository = {
         return new Promise((resolve, reject) => {
             try {
                 const stringifiedGroup = localStorage.getItem('group');
+                console.log("GET GROUP STRINGIFIED: ", stringifiedGroup)
                 if (stringifiedGroup) {
                     const parsedGroup = JSON.parse(stringifiedGroup);
+                    console.log("GET GROUP PARSED: ", parsedGroup)
                     parsedGroup.members = new Set(parsedGroup.members);
+                    console.log("GET GROUP PARSED MEMBERS: ", parsedGroup.members)
                     parsedGroup.expenseList = new Set(parsedGroup.expenseList);
                     resolve(parsedGroup);
                 } else {
@@ -26,7 +30,6 @@ export const localStorageGroupRepository: GroupRepository = {
             }
         });
     },
-
     //We have to convert the Sets to Arrays because the Set object is not serializable, and thus, cannot be saved in localStorage.
     saveGroup: function (group: Group): Promise<void> {
         return new Promise((resolve, reject) => {
@@ -46,6 +49,27 @@ export const localStorageGroupRepository: GroupRepository = {
         return new Promise((resolve, reject) => {
             try {
                 group.expenseList.add(expense);
+                let payerFound = false;
+
+                group.members.forEach((user) => {
+                    if (user.id === expense.payerId) {
+                        payerFound = true;
+                        user.balance -= expense.amount;
+                    }
+                });
+                if (!payerFound) {
+                    reject(new Error("No se encontró al pagador en el conjunto de usuarios."));
+                    return;
+                }
+
+                const totalReceivers = group.members.size - 1;
+                const amountPerReceiver = expense.amount / totalReceivers;
+
+                group.members.forEach((user) => {
+                    if (user.id !== expense.payerId) {
+                        user.balance += amountPerReceiver;
+                    }
+                });
                 this.saveGroup(group).then(() => resolve());
             } catch (error) {
                 reject(error);
@@ -63,10 +87,38 @@ export const localStorageGroupRepository: GroupRepository = {
         });
     },
     getGroupBalance: function ({ members }: Group): Promise<Map<User, number>> | Promise<null> {
+        if (!members) return Promise.resolve(null);
         const groupBalance = new Map<User, number>();
-        for (const member of members) {
+
+        Array.from(members).forEach((member) => {
             groupBalance.set(member, member.balance);
-        }
+        });
         return Promise.resolve(groupBalance);
+    },
+    getGroupDebts: function ({ members }: Group): Promise<Debt[]> {
+        const sortedUsers = Array.from(members).sort((a, b) => a.balance - b.balance);
+        const debts: Debt[] = [];
+
+        while (sortedUsers.length > 1) {
+            const debtor = sortedUsers[0] as User;
+            const creditor = sortedUsers[sortedUsers.length - 1] as User;
+
+            const amount = Math.min(Math.abs(debtor.balance), Math.abs(creditor.balance));
+            const amountFixed = parseFloat(amount.toFixed(2));
+
+            debtor.balance = parseFloat((debtor.balance + amount).toFixed(2));
+            creditor.balance = parseFloat((creditor.balance - amount).toFixed(2));
+
+            debts.push({
+                debtor,
+                creditor,
+                amount: amountFixed.toString(),
+            });
+
+            if (debtor.balance === 0) sortedUsers.shift();
+            if (creditor.balance === 0) sortedUsers.pop();
+        }
+
+        return Promise.resolve(debts);
     }
 }

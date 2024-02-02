@@ -20,4 +20,5 @@ export const groupRepositoryMock: GroupRepository = {
       ])
     )
   ),
+  getGroupDebts: jest.fn(),
 };

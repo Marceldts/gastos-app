@@ -33,7 +33,7 @@
 }
 
 .custom-button {
-  margin-left: 10px;
+  margin: 3px;
   padding: 8px 12px;
   background-color: var(--color-secondary);
   color: var(--color-text-light);
@@ -166,4 +166,20 @@
 table {
   max-width: 800px;
   margin: auto;
+}
+
+.positive-balance {
+  color: var(--color-positive-balance);
+}
+
+.negative-balance {
+  color: var(--color-negative-balance);
+}
+
+.positive-number {
+  color: var(--color-positive-balance);
+}
+
+.negative-number {
+  color: var(--color-negative-balance);
 }
