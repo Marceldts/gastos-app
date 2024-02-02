@@ -12,6 +12,7 @@ import { User } from 'domain/user/User';
 import { getGroupBalance } from 'application/get/getGroupBalance';
 import { saveGroup } from 'application/save/saveGroup';
 import { Debt } from 'domain/debt/Debt';
+import { Expense } from 'domain/expense/Expense';
 
 function App() {
   const [groupData, setGroupData] = useState({} as Group);
@@ -66,11 +67,19 @@ function App() {
   useEffect(() => {
     const getGroupWhenInit = async (repository: GroupRepository) => {
       const group = await getGroup(repository);
-      setGroupData(group!);
-      await saveGroup(repository, group!);
+      setGroupData(group?.expenseList?.size == 0 && group.members.size == 0 ? testGroup : group!);
+      await saveGroup(repository, group?.expenseList?.size == 0 && group.members.size == 0 ? testGroup : group!);
       return group;
     }
-    getGroupWhenInit(repository);
+
+    getGroupWhenInit(repository).then(async (group) => {
+      if (group?.members?.size === 0) {
+        const updatedTableData = await getGroup(localStorageGroupRepository);
+        setGroupData(updatedTableData!);
+        clearExpenseForm();
+        setShowExpenseForm(false)
+      }
+    });
   }, []);
 
   useEffect(() => {
@@ -105,7 +114,6 @@ function App() {
       e.preventDefault();
       await addExpense(localStorageGroupRepository, groupData, expenseFormData);
       const updatedTableData = await getGroup(localStorageGroupRepository);
-      console.log("GroupData after adding expense: ", updatedTableData)
       setGroupData(updatedTableData!);
       clearExpenseForm();
       setShowExpenseForm(false);
@@ -164,7 +172,7 @@ function App() {
 
   return (
     <div className="App">
-      {tableData.body.length > 0 && <CustomTable className="group-table" data={tableData} />}
+      {!!tableData && <CustomTable className="group-table" data={tableData} />}
       {tableData.body.length === 0 && <p>No hay gastos</p>}
       {(showExpenseForm || showUserForm) && <section className='forms'>
         {showExpenseForm && (

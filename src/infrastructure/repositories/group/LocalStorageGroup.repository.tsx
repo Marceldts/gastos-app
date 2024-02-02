@@ -35,8 +35,8 @@ export const localStorageGroupRepository: GroupRepository = {
         return new Promise((resolve, reject) => {
             try {
                 const groupToSave = {
-                    expenseList: Array.from(group.expenseList),
-                    members: Array.from(group.members),
+                    expenseList: Array.from(group.expenseList ?? []),
+                    members: Array.from(group.members ?? []),
                 };
                 localStorage.setItem('group', JSON.stringify(groupToSave));
                 resolve();
@@ -79,6 +79,7 @@ export const localStorageGroupRepository: GroupRepository = {
     addMember: function (group: Group, member: User): Promise<void> {
         return new Promise((resolve, reject) => {
             try {
+                console.warn("ENTRA A ADDMEMBER")
                 group.members.add(member);
                 this.saveGroup(group).then(() => resolve());
             } catch (error) {
