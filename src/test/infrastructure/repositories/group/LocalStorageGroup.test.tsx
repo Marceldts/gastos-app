@@ -5,7 +5,7 @@ import { localStorageGroupRepository } from "infrastructure/repositories/group/L
 
 describe('local storage group repository implementation', () => {
     let repository: GroupRepository;
-    const mockedError = new Error('Simulated error');
+    const mockedError = new Error("No se encontró al pagador en el conjunto de usuarios.");
 
     beforeAll(() => {
         repository = localStorageGroupRepository;
