@@ -50,26 +50,20 @@ export const localStorageGroupRepository: GroupRepository = {
             try {
                 group.expenseList.add(expense);
                 let payerFound = false;
+                const totalReceivers = group.members.size;
+                const amountPerReceiver = expense.amount / totalReceivers;
 
                 group.members.forEach((user) => {
                     if (user.id === expense.payerId) {
                         payerFound = true;
-                        user.balance -= expense.amount;
+                        user.balance += expense.amount;
                     }
+                    user.balance -= amountPerReceiver;
                 });
                 if (!payerFound) {
                     reject(new Error("No se encontró al pagador en el conjunto de usuarios."));
                     return;
                 }
-
-                const totalReceivers = group.members.size - 1;
-                const amountPerReceiver = expense.amount / totalReceivers;
-
-                group.members.forEach((user) => {
-                    if (user.id !== expense.payerId) {
-                        user.balance += amountPerReceiver;
-                    }
-                });
                 this.saveGroup(group).then(() => resolve());
             } catch (error) {
                 reject(error);
