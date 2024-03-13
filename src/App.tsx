@@ -1,4 +1,4 @@
-import { CustomTable } from 'infrastructure/components/03_templates/table/CustomTable'
+import { CustomTable } from 'shared/ui/components/03_templates/table/CustomTable'
 import { SyntheticEvent, useEffect, useState } from 'react'
 import { Group } from 'domain/group/Group'
 import { getGroup } from 'application/get/getGroup'
