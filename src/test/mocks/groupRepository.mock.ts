@@ -1,6 +1,6 @@
-import { Expense } from 'domain/expense/Expense'
-import { GroupRepository } from 'domain/group/Group.repository'
-import { User } from 'domain/user/User'
+import { Expense } from 'expense/domain/Expense'
+import { GroupRepository } from 'group/domain/Group.repository'
+import { User } from 'user/domain/User'
 
 export const groupRepositoryMock: GroupRepository = {
   getGroup: jest.fn().mockImplementation(() => {
