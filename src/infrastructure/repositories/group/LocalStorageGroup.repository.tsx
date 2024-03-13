@@ -45,30 +45,31 @@ export const localStorageGroupRepository: GroupRepository = {
             }
         });
     },
-    addExpense: function (group: Group, expense: Expense): Promise<void> {
-        return new Promise((resolve, reject) => {
-            try {
-                group.expenseList.add(expense);
-                let payerFound = false;
-                const totalReceivers = group.members.size;
-                const amountPerReceiver = expense.amount / totalReceivers;
+    /*
+        TODO: Aplicar ley demeter
+    */
+       /*
+        TODO: Quitar new Promise
+    */
+    addExpense: async function (group: Group, expense: Expense): Promise<void> {
+        group.expenseList.add(expense);
+        let payerFound = false;
+        const totalReceivers = group.members.size;
+        const amountPerReceiver = expense.amount / totalReceivers;
 
-                group.members.forEach((user) => {
-                    if (user.id === expense.payerId) {
-                        payerFound = true;
-                        user.balance += expense.amount;
-                    }
-                    user.balance -= amountPerReceiver;
-                });
-                if (!payerFound) {
-                    reject(new Error("No se encontró al pagador en el conjunto de usuarios."));
-                    return;
-                }
-                this.saveGroup(group).then(() => resolve());
-            } catch (error) {
-                reject(error);
+        group.members.forEach((user) => {
+            if (user.id === expense.payerId) {
+                payerFound = true;
+                user.balance += expense.amount;
             }
+            user.balance -= amountPerReceiver;
         });
+
+        if (!payerFound) {
+            throw new Error("No se encontró al pagador en el conjunto de usuarios.")
+        }
+
+        this.saveGroup(group)
     },
     addMember: function (group: Group, member: User): Promise<void> {
         return new Promise((resolve, reject) => {
