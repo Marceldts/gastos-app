@@ -6,9 +6,8 @@ export interface User {
   balance: number
 }
 
-export const isUserValid = ({ name }: User): boolean => {
+export const ensureIsUserValid = ({ name }: User): void => {
   let errorMessage = ''
   if (!isUserNameValid(name)) errorMessage += 'Name is not valid.\n'
   if (errorMessage.length > 0) throw new Error('\n' + errorMessage)
-  return true
 }

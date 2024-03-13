@@ -11,12 +11,11 @@ export interface Expense {
   date: string
 }
 
-export const isExpenseValid = ({ payerId, amount, description, date }: Expense): boolean => {
+export const ensureIsExpenseValid = ({ payerId, amount, description, date }: Expense): void => {
   let errorMessage = ''
   if (!isPayerIdValid(payerId)) errorMessage += 'Payer id is not valid.\n'
   if (!isAmountValid(amount)) errorMessage += 'Amount is not valid.\n'
   if (!isDescriptionValid(description)) errorMessage += 'Description is not valid.\n'
   if (!isDateValid(date)) errorMessage += 'Date is not valid.\n'
   if (errorMessage.length > 0) throw new Error('\n' + errorMessage)
-  return true
 }

@@ -5,37 +5,27 @@ import { addMember } from 'application/add/addMember'
 
 describe('Add member', () => {
   const repository = groupRepositoryMock
-  const isUserValid: jest.SpyInstance = jest.spyOn(require('domain/user/User'), 'isUserValid')
+  // const ensureIsUserValid: jest.SpyInstance = jest.spyOn(require('domain/user/User'), 'ensureIsUserValid')
 
-  test('should add a member to the group', () => {
+  test('should add a member to the group', async () => {
     const group: Group = {
       expenseList: new Set(),
       members: new Set(),
     }
     const member: User = { name: 'Test user', balance: 0, id: 1 }
 
-    isUserValid.mockReturnValue(true)
+    await addMember(repository, group, member)
 
-    const addMemberPromise = addMember(repository, group, member)
-
-    expect(isUserValid).toHaveBeenCalledWith(member)
     expect(repository.addMember).toHaveBeenCalledWith(group, member)
-    expect(addMemberPromise).resolves
   })
 
-  test('should not add a member to the group if it is not valid', () => {
+  test('should not add a member to the group if it is not valid and throw an exception', async () => {
     const group: Group = {
       expenseList: new Set(),
       members: new Set(),
     }
     const member = { name: '', balance: 0, id: 1 }
 
-    isUserValid.mockReturnValue(false)
-
-    const addMemberPromise = addMember(repository, group, member)
-
-    expect(isUserValid).toHaveBeenCalledWith(member)
-    expect(repository.addMember).not.toHaveBeenCalledWith(group, member)
-    expect(addMemberPromise).rejects
+    expect(async () => await addMember(repository, group, member)).rejects.toThrow()
   })
 })

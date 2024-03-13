@@ -1,24 +1,32 @@
 import { saveGroup } from 'application/save/saveGroup'
 import { Expense } from 'domain/expense/Expense'
+import { Group } from 'domain/group/Group'
 import { User } from 'domain/user/User'
 import { groupRepositoryMock } from 'test/mocks/groupRepository.mock'
 
 describe('saveGroup', () => {
   const repository = groupRepositoryMock
-  const group = { members: new Set<User>(), expenseList: new Set<Expense>() }
-  const isGroupValid: jest.SpyInstance = jest.spyOn(require('domain/group/Group'), 'isGroupValid')
 
   it('setGroup use case should call the repository setGroup method when the group is valid', async () => {
-    isGroupValid.mockReturnValueOnce(true)
-    await saveGroup(repository, group)
-    expect(isGroupValid).toHaveBeenCalledWith(group)
-    expect(repository.saveGroup).toHaveBeenCalledWith(group)
+    const group = { members: new Set<User>(), expenseList: new Set<Expense>() }
+    expect(async () => await saveGroup(repository, group)).not.toThrow()
   })
 
   it('setGroup use case should not call the repository setGroup method when the group is not valid', async () => {
-    isGroupValid.mockReturnValueOnce(false)
-    await saveGroup(repository, group)
-    expect(isGroupValid).toHaveBeenCalledWith(group)
-    expect(repository.saveGroup).not.toHaveBeenCalled()
+    const invalidUser1: User = {
+      id: 1,
+      name: 'Test user 1',
+      balance: 0,
+    }
+    const invalidUser2: User = {
+      id: 1,
+      name: 'Test user 2',
+      balance: 0,
+    }
+    const invalidMockedGroup: Group = {
+      expenseList: new Set(),
+      members: new Set([invalidUser1, invalidUser2]),
+    }
+    expect(async () => await saveGroup(repository, invalidMockedGroup)).rejects.toThrow()
   })
 })

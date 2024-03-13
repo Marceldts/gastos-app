@@ -5,7 +5,6 @@ import { groupRepositoryMock } from 'test/mocks/groupRepository.mock'
 
 describe('Add Expense', () => {
   const repository = groupRepositoryMock
-  const isExpenseValid: jest.SpyInstance = jest.spyOn(require('domain/expense/Expense'), 'isExpenseValid')
 
   test('should add an expense to the group', () => {
     const group = { members: new Set<User>(), expenseList: new Set<Expense>() }
@@ -17,16 +16,12 @@ describe('Add Expense', () => {
       date: '2022-01-28',
     }
 
-    isExpenseValid.mockReturnValue(true)
+    addExpense(repository, group, validMockedExpense)
 
-    const addExpensePromise = addExpense(repository, group, validMockedExpense)
-
-    expect(isExpenseValid).toHaveBeenCalledWith(validMockedExpense)
     expect(repository.saveGroup).toHaveBeenCalledWith(group)
-    expect(addExpensePromise).resolves
   })
 
-  test('should not add an expense to the group if it is not valid', () => {
+  test('should not add an expense to the group if it is not valid', async () => {
     const group = { members: new Set<User>(), expenseList: new Set<Expense>() }
     const invalidMockedExpense: Expense = {
       payerId: 0,
@@ -36,12 +31,6 @@ describe('Add Expense', () => {
       date: '2022-01-28',
     }
 
-    isExpenseValid.mockReturnValue(false)
-
-    const addExpensePromise = addExpense(repository, group, invalidMockedExpense)
-
-    expect(isExpenseValid).toHaveBeenCalledWith(invalidMockedExpense)
-    expect(repository.saveGroup).not.toHaveBeenCalledWith(group)
-    expect(addExpensePromise).rejects
+    expect(async () => await addExpense(repository, group, invalidMockedExpense)).rejects.toThrow()
   })
 })

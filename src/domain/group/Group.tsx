@@ -6,13 +6,12 @@ export interface Group {
   members: Set<User>
 }
 
-export const isGroupValid = ({ members, expenseList }: Group): boolean => {
+export const ensureIsGroupValid = ({ members, expenseList }: Group): void => {
   let errorMessage = ''
   if (!everyMemberHasUniqueIds(members)) errorMessage += 'Members list has duplicate ids.\n'
   if (cannotHaveExpensesWithoutMembers({ members, expenseList }))
     errorMessage += 'Cannot have expenses without members.\n'
   if (errorMessage.length > 0) throw new Error('\n' + errorMessage)
-  return true
 }
 
 const everyMemberHasUniqueIds = (members: Set<User>): boolean => {

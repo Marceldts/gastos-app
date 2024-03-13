@@ -1,13 +1,13 @@
 import { User } from 'domain/user/User'
-import { Group, isGroupValid } from 'domain/group/Group'
+import { Group, ensureIsGroupValid } from 'domain/group/Group'
 
-describe('isGroupValid', () => {
+describe('ensureIsGroupValid', () => {
   test('valid group', () => {
     const validMockedGroup: Group = {
       expenseList: new Set(),
       members: new Set(),
     }
-    expect(() => isGroupValid(validMockedGroup)).not.toThrow()
+    expect(() => ensureIsGroupValid(validMockedGroup)).not.toThrow()
   })
 })
 
@@ -27,7 +27,7 @@ describe('isGroupNotValid', () => {
       expenseList: new Set(),
       members: new Set([invalidUser1, invalidUser2]),
     }
-    expect(() => isGroupValid(invalidMockedGroup)).toThrow('\nMembers list has duplicate ids.\n')
+    expect(() => ensureIsGroupValid(invalidMockedGroup)).toThrow('\nMembers list has duplicate ids.\n')
   })
   test('cannot have expenses without members', () => {
     const invalidMockedGroup: Group = {
@@ -42,6 +42,6 @@ describe('isGroupNotValid', () => {
       ]),
       members: new Set(),
     }
-    expect(() => isGroupValid(invalidMockedGroup)).toThrow('\nCannot have expenses without members.\n')
+    expect(() => ensureIsGroupValid(invalidMockedGroup)).toThrow('\nCannot have expenses without members.\n')
   })
 })

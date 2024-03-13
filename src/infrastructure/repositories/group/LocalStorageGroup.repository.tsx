@@ -1,6 +1,6 @@
 import { Debt } from 'domain/debt/Debt'
 import { Expense } from 'domain/expense/Expense'
-import { Group, isGroupValid } from 'domain/group/Group'
+import { Group, ensureIsGroupValid } from 'domain/group/Group'
 import { GroupRepository } from 'domain/group/Group.repository'
 import { User } from 'domain/user/User'
 
@@ -32,9 +32,6 @@ export const localStorageGroupRepository: GroupRepository = {
   },
   /*
         TODO: Aplicar ley demeter
-    */
-  /*
-        TODO: Quitar new Promise
     */
   addExpense: async function (group: Group, expense: Expense): Promise<void> {
     group.expenseList.add(expense)
