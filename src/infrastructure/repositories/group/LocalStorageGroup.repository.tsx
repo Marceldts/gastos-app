@@ -6,44 +6,29 @@ import { User } from 'domain/user/User'
 
 export const localStorageGroupRepository: GroupRepository = {
   //We have to convert the Arrays to Sets because the Set object is not serializable, and thus, cannot be saved in localStorage.
-  getGroup: function (): Promise<Group | undefined> {
-    return new Promise((resolve, reject) => {
-      try {
-        const stringifiedGroup = localStorage.getItem('group')
-        console.log('GET GROUP STRINGIFIED: ', stringifiedGroup)
-        if (stringifiedGroup) {
-          const parsedGroup = JSON.parse(stringifiedGroup)
-          console.log('GET GROUP PARSED: ', parsedGroup)
-          parsedGroup.members = new Set(parsedGroup.members)
-          console.log('GET GROUP PARSED MEMBERS: ', parsedGroup.members)
-          parsedGroup.expenseList = new Set(parsedGroup.expenseList)
-          resolve(parsedGroup)
-        } else {
-          const emptyGroup: Group = {
-            expenseList: new Set(),
-            members: new Set(),
-          }
-          this.saveGroup(emptyGroup).then(() => resolve(emptyGroup))
-        }
-      } catch (error) {
-        reject(error)
+  getGroup: async function (): Promise<Group | undefined> {
+    const stringifiedGroup = localStorage.getItem('group')
+    if (stringifiedGroup) {
+      const parsedGroup = JSON.parse(stringifiedGroup)
+      parsedGroup.members = new Set(parsedGroup.members)
+      parsedGroup.expenseList = new Set(parsedGroup.expenseList)
+      return parsedGroup
+    } else {
+      const emptyGroup: Group = {
+        expenseList: new Set(),
+        members: new Set(),
       }
-    })
+      await this.saveGroup(emptyGroup)
+      return emptyGroup
+    }
   },
   //We have to convert the Sets to Arrays because the Set object is not serializable, and thus, cannot be saved in localStorage.
-  saveGroup: function (group: Group): Promise<void> {
-    return new Promise((resolve, reject) => {
-      try {
-        const groupToSave = {
-          expenseList: Array.from(group.expenseList ?? []),
-          members: Array.from(group.members ?? []),
-        }
-        localStorage.setItem('group', JSON.stringify(groupToSave))
-        resolve()
-      } catch (error) {
-        reject(error)
-      }
-    })
+  saveGroup: async function (group: Group): Promise<void> {
+    const groupToSave = {
+      expenseList: Array.from(group.expenseList ?? []),
+      members: Array.from(group.members ?? []),
+    }
+    localStorage.setItem('group', JSON.stringify(groupToSave))
   },
   /*
         TODO: Aplicar ley demeter
@@ -71,27 +56,20 @@ export const localStorageGroupRepository: GroupRepository = {
 
     this.saveGroup(group)
   },
-  addMember: function (group: Group, member: User): Promise<void> {
-    return new Promise((resolve, reject) => {
-      try {
-        console.warn('ENTRA A ADDMEMBER')
-        group.members.add(member)
-        this.saveGroup(group).then(() => resolve())
-      } catch (error) {
-        reject(error)
-      }
-    })
+  addMember: async function (group: Group, member: User): Promise<void> {
+    group.members.add(member)
+    await this.saveGroup(group)
   },
-  getGroupBalance: function ({ members }: Group): Promise<Map<User, number>> | Promise<null> {
-    if (!members) return Promise.resolve(null)
+  getGroupBalance: async function ({ members }: Group): Promise<Map<User, number> | null> {
+    if (!members) return null
     const groupBalance = new Map<User, number>()
 
     Array.from(members).forEach(member => {
       groupBalance.set(member, member.balance)
     })
-    return Promise.resolve(groupBalance)
+    return groupBalance
   },
-  getGroupDebts: function ({ members }: Group): Promise<Debt[]> {
+  getGroupDebts: async function ({ members }: Group): Promise<Debt[]> {
     const sortedUsers = Array.from(members).sort((a, b) => a.balance - b.balance)
     const debts: Debt[] = []
 
@@ -115,6 +93,6 @@ export const localStorageGroupRepository: GroupRepository = {
       if (creditor.balance === 0) sortedUsers.pop()
     }
 
-    return Promise.resolve(debts)
+    return debts
   },
 }

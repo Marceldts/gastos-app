@@ -8,6 +8,6 @@ export interface GroupRepository {
   saveGroup(group: Group): Promise<void>
   addExpense(group: Group, expense: Expense): Promise<void>
   addMember(group: Group, member: User): Promise<void>
-  getGroupBalance(group: Group): Promise<Map<User, number>> | Promise<null>
+  getGroupBalance(group: Group): Promise<Map<User, number> | null>
   getGroupDebts(group: Group): Promise<Debt[]>
 }
