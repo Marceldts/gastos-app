@@ -10,13 +10,8 @@ TODO:
     4- Cláusula de guarda isExpenseValid -> ensureIsExpenseValid
 */
 export const addExpense = async (groupRepository: GroupRepository, group: Group, expense: Expense): Promise<void> => {
-  try {
-    if (isExpenseValid(expense)) {
-      groupRepository.addExpense(group, expense)
-      await groupRepository.saveGroup(group)
-    }
-    return Promise.resolve()
-  } catch (error) {
-    return Promise.reject(error)
+  if (isExpenseValid(expense)) {
+    groupRepository.addExpense(group, expense)
+    await groupRepository.saveGroup(group)
   }
 }
