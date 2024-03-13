@@ -48,6 +48,7 @@ function App() {
 
   const today = new Date().toISOString().split('T')[0];
 
+  //TODO: Mover datos mockeados a otra capa infra
   const testGroup: Group = {
     members: new Set([
       { name: 'Marcel', balance: 59.15, id: 1 },
@@ -253,3 +254,20 @@ function App() {
 }
 
 export default App;
+
+
+
+// shared
+//   application
+//     usecase
+//       usecase.ts
+//       query.ts
+//       command.ts
+//   ui/
+//     components/
+//       ->
+//   datetime/
+//     datetime.ts
+//   currency  
+//     currency-formatter.ts
+
