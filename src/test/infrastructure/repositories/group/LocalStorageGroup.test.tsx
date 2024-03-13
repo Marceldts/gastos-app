@@ -1,193 +1,227 @@
-import { User } from "domain/user/User";
-import { Group } from "domain/group/Group";
-import { GroupRepository } from "domain/group/Group.repository";
-import { localStorageGroupRepository } from "infrastructure/repositories/group/LocalStorageGroup.repository";
+import { User } from 'domain/user/User'
+import { Group } from 'domain/group/Group'
+import { GroupRepository } from 'domain/group/Group.repository'
+import { localStorageGroupRepository } from 'infrastructure/repositories/group/LocalStorageGroup.repository'
 
 describe('local storage group repository implementation', () => {
-    let repository: GroupRepository;
-    const mockedError = new Error("No se encontró al pagador en el conjunto de usuarios.");
+  let repository: GroupRepository
+  const mockedError = new Error('No se encontró al pagador en el conjunto de usuarios.')
+
+  beforeAll(() => {
+    repository = localStorageGroupRepository
+  })
+
+  describe('getGroup', () => {
+    let getItemMock: jest.SpyInstance
 
     beforeAll(() => {
-        repository = localStorageGroupRepository;
-    });
+      getItemMock = jest.spyOn(Storage.prototype, 'getItem')
+    })
 
-    describe('getGroup', () => {
+    test('getGroup should return an empty group if there is no group in local storage', async () => {
+      getItemMock.mockReturnValueOnce(JSON.stringify(undefined))
+      repository = localStorageGroupRepository
+      const group = await repository.getGroup()
+      expect(group).toEqual({
+        members: new Set(),
+        expenseList: new Set(),
+      })
+    })
 
-        let getItemMock: jest.SpyInstance;
+    test('getGroup should return the group from local storage if there is one', async () => {
+      const mockedSerializedGroup = {
+        members: [],
+        expenseList: [],
+      }
+      const mockedGroup = {
+        members: new Set(),
+        expenseList: new Set(),
+      }
+      getItemMock.mockReturnValueOnce(JSON.stringify(mockedSerializedGroup))
+      repository = localStorageGroupRepository
+      const group = await repository.getGroup()
+      expect(group).toEqual(mockedGroup)
+    })
 
-        beforeAll(() => {
-            getItemMock = jest.spyOn(Storage.prototype, 'getItem');
-        });
+    test('getGroup should reject the promise on error', async () => {
+      getItemMock.mockImplementationOnce(() => {
+        throw mockedError
+      })
 
-        test('getGroup should return an empty group if there is no group in local storage', async () => {
-            getItemMock.mockReturnValueOnce(JSON.stringify(undefined));
-            repository = localStorageGroupRepository;
-            const group = await repository.getGroup();
-            expect(group).toEqual({
-                members: new Set(),
-                expenseList: new Set(),
-            });
-        });
+      repository = localStorageGroupRepository
 
-        test('getGroup should return the group from local storage if there is one', async () => {
-            const mockedSerializedGroup = {
-                members: [],
-                expenseList: [],
-            };
-            const mockedGroup = {
-                members: new Set(),
-                expenseList: new Set(),
-            };
-            getItemMock.mockReturnValueOnce(JSON.stringify(mockedSerializedGroup));
-            repository = localStorageGroupRepository;
-            const group = await repository.getGroup();
-            expect(group).toEqual(mockedGroup);
-        });
+      await expect(repository.getGroup()).rejects.toThrow(mockedError)
+    })
+  })
 
-        test('getGroup should reject the promise on error', async () => {
-            getItemMock.mockImplementationOnce(() => {
-                throw mockedError;
-            });
+  describe('saveGroup', () => {
+    let setItemMock: jest.SpyInstance
 
-            repository = localStorageGroupRepository;
+    beforeAll(() => {
+      setItemMock = jest.spyOn(Storage.prototype, 'setItem')
+    })
 
-            await expect(repository.getGroup()).rejects.toThrow(mockedError);
-        });
-    });
+    test('saveGroup should save the group in local storage', async () => {
+      const groupToSave: Group = {
+        expenseList: new Set([
+          {
+            payerId: 1,
+            payerName: 'Test',
+            amount: 100,
+            description: 'Test expense',
+            date: '2022-01-28',
+          },
+        ]),
+        members: new Set([{ name: 'Test user', balance: 0, id: 1 }]),
+      }
 
-    describe('saveGroup', () => {
+      const repository = localStorageGroupRepository
 
-        let setItemMock: jest.SpyInstance;
+      await repository.saveGroup(groupToSave)
 
-        beforeAll(() => {
-            setItemMock = jest.spyOn(Storage.prototype, 'setItem');
-        });
+      expect(setItemMock).toHaveBeenCalledWith(
+        'group',
+        JSON.stringify({
+          expenseList: Array.from(groupToSave.expenseList),
+          members: Array.from(groupToSave.members),
+        }),
+      )
+    })
 
-        test('saveGroup should save the group in local storage', async () => {
+    test('saveGroup should reject the promise on error', async () => {
+      setItemMock.mockImplementationOnce(() => {
+        throw mockedError
+      })
 
-            const groupToSave: Group = {
-                expenseList: new Set([{ payerId: 1, payerName: "Test", amount: 100, description: 'Test expense', date: '2022-01-28' }]),
-                members: new Set([{ name: 'Test user', balance: 0, id: 1 }]),
-            };
+      repository = localStorageGroupRepository
 
-            const repository = localStorageGroupRepository;
+      await expect(
+        repository.saveGroup({
+          expenseList: new Set(),
+          members: new Set(),
+        }),
+      ).rejects.toThrow(mockedError)
+    })
+  })
 
-            await repository.saveGroup(groupToSave);
+  describe('addExpense', () => {
+    let saveGroupMock: jest.SpyInstance
 
-            expect(setItemMock).toHaveBeenCalledWith('group', JSON.stringify({
-                expenseList: Array.from(groupToSave.expenseList),
-                members: Array.from(groupToSave.members),
-            }));
-        });
+    beforeAll(() => {
+      saveGroupMock = jest.spyOn(localStorageGroupRepository, 'saveGroup')
+    })
 
-        test('saveGroup should reject the promise on error', async () => {
-            setItemMock.mockImplementationOnce(() => {
-                throw mockedError;
-            });
+    test('addExpense should add the expense to the group and save it', async () => {
+      const group: Group = {
+        expenseList: new Set(),
+        members: new Set([{ name: 'Test user', balance: 0, id: 1 }]),
+      }
+      const expense = {
+        payerId: 1,
+        payerName: 'Test',
+        amount: 100,
+        description: 'Test expense',
+        date: '2022-01-28',
+      }
 
-            repository = localStorageGroupRepository;
+      saveGroupMock.mockResolvedValueOnce(() => {})
 
-            await expect(repository.saveGroup({
-                expenseList: new Set(),
-                members: new Set(),
-            })).rejects.toThrow(mockedError);
-        });
-    });
+      await localStorageGroupRepository.addExpense(group, expense)
 
-    describe('addExpense', () => {
-        let saveGroupMock: jest.SpyInstance;
+      expect(group.expenseList.has(expense)).toBeTruthy()
+      expect(saveGroupMock).toHaveBeenCalledWith(group)
+    })
 
-        beforeAll(() => {
-            saveGroupMock = jest.spyOn(localStorageGroupRepository, 'saveGroup');
-        });
+    test('addExpense should reject the promise on error', async () => {
+      saveGroupMock.mockImplementationOnce(() => {
+        throw mockedError
+      })
 
-        test('addExpense should add the expense to the group and save it', async () => {
-            const group: Group = {
-                expenseList: new Set(),
-                members: new Set([{ name: 'Test user', balance: 0, id: 1 }]),
-            };
-            const expense = { payerId: 1, payerName: "Test", amount: 100, description: 'Test expense', date: '2022-01-28' };
+      await expect(
+        localStorageGroupRepository.addExpense(
+          {
+            expenseList: new Set(),
+            members: new Set(),
+          },
+          {
+            payerId: 1,
+            payerName: 'Test',
+            amount: 100,
+            description: 'Test expense',
+            date: '2022-01-28',
+          },
+        ),
+      ).rejects.toThrow(mockedError)
+    })
+  })
 
-            saveGroupMock.mockResolvedValueOnce(() => { });
+  describe('addMember', () => {
+    let saveGroupMock: jest.SpyInstance
 
-            await localStorageGroupRepository.addExpense(group, expense);
+    beforeAll(() => {
+      saveGroupMock = jest.spyOn(localStorageGroupRepository, 'saveGroup')
+    })
 
-            expect(group.expenseList.has(expense)).toBeTruthy();
-            expect(saveGroupMock).toHaveBeenCalledWith(group);
-        });
+    test('addMember should add the member to the group and save it', async () => {
+      const group: Group = {
+        expenseList: new Set(),
+        members: new Set(),
+      }
+      const member = { name: 'Test user', balance: 0, id: 1 }
 
-        test('addExpense should reject the promise on error', async () => {
-            saveGroupMock.mockImplementationOnce(() => {
-                throw mockedError;
-            });
+      saveGroupMock.mockResolvedValueOnce(() => {})
 
-            await expect(localStorageGroupRepository.addExpense({
-                expenseList: new Set(),
-                members: new Set(),
-            }, { payerId: 1, payerName: "Test", amount: 100, description: 'Test expense', date: '2022-01-28' })).rejects.toThrow(mockedError);
-        });
-    });
+      await localStorageGroupRepository.addMember(group, member)
 
-    describe('addMember', () => {
-        let saveGroupMock: jest.SpyInstance;
+      expect(group.members.has(member)).toBeTruthy()
+      expect(saveGroupMock).toHaveBeenCalledWith(group)
+    })
 
-        beforeAll(() => {
-            saveGroupMock = jest.spyOn(localStorageGroupRepository, 'saveGroup');
-        });
+    test('addMember should reject the promise on error', async () => {
+      saveGroupMock.mockImplementationOnce(() => {
+        throw mockedError
+      })
 
-        test('addMember should add the member to the group and save it', async () => {
-            const group: Group = {
-                expenseList: new Set(),
-                members: new Set(),
-            };
-            const member = { name: 'Test user', balance: 0, id: 1 };
+      await expect(
+        localStorageGroupRepository.addMember(
+          {
+            expenseList: new Set(),
+            members: new Set(),
+          },
+          { name: 'Test user', balance: 0, id: 1 },
+        ),
+      ).rejects.toThrow(mockedError)
+    })
+  })
 
-            saveGroupMock.mockResolvedValueOnce(() => { });
+  describe('getGroupBalance', () => {
+    test('if the group is empty, getGroupBalance should return an empty map', async () => {
+      const group: Group = {
+        expenseList: new Set(),
+        members: new Set(),
+      }
 
-            await localStorageGroupRepository.addMember(group, member);
+      const balance = await localStorageGroupRepository.getGroupBalance(group)
 
-            expect(group.members.has(member)).toBeTruthy();
-            expect(saveGroupMock).toHaveBeenCalledWith(group);
-        });
+      expect(balance).toEqual(new Map<User, number>())
+    })
 
-        test('addMember should reject the promise on error', async () => {
-            saveGroupMock.mockImplementationOnce(() => {
-                throw mockedError;
-            });
+    test('if the group is not empty, getGroupBalance should return a map with the members and their balance', async () => {
+      const member1 = { name: 'Test user 1', balance: 10, id: 1 }
+      const member2 = { name: 'Test user 2', balance: -10, id: 2 }
+      const group: Group = {
+        expenseList: new Set(),
+        members: new Set([member1, member2]),
+      }
 
-            await expect(localStorageGroupRepository.addMember({
-                expenseList: new Set(),
-                members: new Set(),
-            }, { name: 'Test user', balance: 0, id: 1 })).rejects.toThrow(mockedError);
-        });
-    });
+      const balance = await localStorageGroupRepository.getGroupBalance(group)
 
-    describe('getGroupBalance', () => {
-        test('if the group is empty, getGroupBalance should return an empty map', async () => {
-            const group: Group = {
-                expenseList: new Set(),
-                members: new Set(),
-            };
-
-            const balance = await localStorageGroupRepository.getGroupBalance(group);
-
-            expect(balance).toEqual(new Map<User, number>());
-        });
-
-        test('if the group is not empty, getGroupBalance should return a map with the members and their balance', async () => {
-            const member1 = { name: 'Test user 1', balance: 10, id: 1 };
-            const member2 = { name: 'Test user 2', balance: -10, id: 2 };
-            const group: Group = {
-                expenseList: new Set(),
-                members: new Set([member1, member2]),
-            };
-
-            const balance = await localStorageGroupRepository.getGroupBalance(group);
-
-            expect(balance).toEqual(new Map<User, number>([
-                [member1, 10],
-                [member2, -10],
-            ]));
-        });
-    });
-});
+      expect(balance).toEqual(
+        new Map<User, number>([
+          [member1, 10],
+          [member2, -10],
+        ]),
+      )
+    })
+  })
+})

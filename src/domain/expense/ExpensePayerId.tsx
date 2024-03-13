@@ -1,3 +1,3 @@
 export const isPayerIdValid = (payerId: number): boolean => {
-    return payerId >= 1;
+  return payerId >= 1
 }
