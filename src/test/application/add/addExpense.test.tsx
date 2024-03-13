@@ -6,7 +6,7 @@ import { groupRepositoryMock } from 'test/mocks/groupRepository.mock'
 describe('Add Expense', () => {
   const repository = groupRepositoryMock
 
-  test('should add an expense to the group', () => {
+  test('should add an expense to the group', async () => {
     const group = { members: new Set<User>(), expenseList: new Set<Expense>() }
     const validMockedExpense: Expense = {
       payerId: 1,
@@ -16,7 +16,7 @@ describe('Add Expense', () => {
       date: '2022-01-28',
     }
 
-    addExpense(repository, group, validMockedExpense)
+    await addExpense(repository, group, validMockedExpense)
 
     expect(repository.saveGroup).toHaveBeenCalledWith(group)
   })
