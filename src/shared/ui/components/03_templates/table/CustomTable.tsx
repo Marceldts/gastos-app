@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { CustomTableHeader } from '../../01_molecules/table-header/CustomTableHeader'
 import { CustomTableBody } from '../../02_organisms/table-body/CustomTableBody'
 import './CustomTable.css'

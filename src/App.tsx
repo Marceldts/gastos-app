@@ -17,6 +17,7 @@ import { DebtList } from 'modules/debt/ui/debts-list'
 import { GroupBalance } from 'modules/group/ui/group-balance'
 import { AddUserForm } from 'modules/group/ui/add-user-form'
 import { AddExpenseForm, ExpenseFormData } from 'modules/group/ui/add-expense-form'
+import { ExpenseTable } from 'modules/expense/ui/expense-table'
 
 function App() {
   const [groupData, setGroupData] = useState({} as Group)
@@ -146,7 +147,7 @@ function App() {
 
   const handleUserFormSubmit = async (username: string) => {
     try {
-      const newUser = { name: username, balance: 0, id: getNewUserId() }
+      const newUser = { name: username, balance: 0, id: _getNewUserId() }
       await addMember(localStorageGroupRepository, groupData, newUser)
       const updatedTableData = await getGroup(localStorageGroupRepository)
       setGroupData(updatedTableData!)
@@ -156,7 +157,7 @@ function App() {
     }
   }
 
-  const getNewUserId = () => {
+  const _getNewUserId = () => {
     let id = Math.floor(Math.random() * 5000) + 1
 
     while (Array.from(groupData.members).some(user => user.id === id)) {
@@ -172,8 +173,7 @@ function App() {
 
   return (
     <div className="App">
-      {!!tableData && <CustomTable className="group-table" data={tableData} />}
-      {tableData.body.length === 0 && <p>No hay gastos</p>}
+      <ExpenseTable tableData={tableData} />
       {(showExpenseForm || showUserForm) && (
         <section className="forms">
           {showExpenseForm && (
