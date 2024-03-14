@@ -1,5 +1,5 @@
 import { User } from 'modules/user/domain/User'
-import '../../../App.css'
+import '../../../../../App.css'
 
 interface GroupBalanceProps {
   balance: Map<User, number> | null

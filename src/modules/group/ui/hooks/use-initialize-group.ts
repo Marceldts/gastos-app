@@ -1,0 +1,65 @@
+import { getGroup } from 'modules/group/application/get/getGroup'
+import { getGroupBalance } from 'modules/group/application/get/getGroupBalance'
+import { saveGroup } from 'modules/group/application/save/saveGroup'
+import { Group } from 'modules/group/domain/Group'
+import { GroupRepository } from 'modules/group/domain/Group.repository'
+import { localStorageGroupRepository } from 'modules/group/infrastructure/repositories/LocalStorageGroup.repository'
+import { User } from 'modules/user/domain/User'
+import { useEffect } from 'react'
+
+export const useInitializeGroup = function (
+  setGroupData: (data: Group) => void,
+  setBalance: (balance: Map<User, number> | null) => void,
+  setShowExpenseForm: (show: boolean) => void,
+) {
+  const repository = localStorageGroupRepository
+  const testGroup: Group = {
+    members: new Set([
+      { name: 'Marcel', balance: 59.15, id: 1 },
+      { name: 'Juan', balance: 22.55, id: 2 },
+      { name: 'Pedro', balance: -40.85, id: 3 },
+      { name: 'Sofia', balance: -40.85, id: 4 },
+    ]),
+    expenseList: new Set([
+      {
+        payerName: 'Marcel',
+        payerId: 1,
+        description: 'Burguers',
+        amount: 100,
+        date: '2023-09-01',
+      },
+      {
+        payerName: 'Juan',
+        payerId: 2,
+        description: 'Pizza',
+        amount: 10,
+        date: '2024-01-02',
+      },
+      {
+        payerName: 'Pedro',
+        payerId: 3,
+        description: 'Refrescos',
+        amount: 53.4,
+        date: '2020-09-03',
+      },
+    ]),
+  }
+
+  useEffect(() => {
+    const _getGroupWhenInit = async (repository: GroupRepository) => {
+      const group = await getGroup(repository)
+      setBalance(await getGroupBalance(localStorageGroupRepository, group!))
+      setGroupData(group?.expenseList?.size === 0 && group.members.size === 0 ? testGroup : group!)
+      await saveGroup(repository, group?.expenseList?.size === 0 && group.members.size === 0 ? testGroup : group!)
+      return group
+    }
+
+    _getGroupWhenInit(repository).then(async group => {
+      if (group?.members?.size === 0) {
+        const updatedTableData = await getGroup(localStorageGroupRepository)
+        setGroupData(updatedTableData!)
+        setShowExpenseForm(false)
+      }
+    })
+  }, [])
+}
