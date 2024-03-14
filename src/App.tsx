@@ -16,6 +16,7 @@ import { Expense } from 'modules/expense/domain/Expense'
 import { DebtList } from 'modules/debt/ui/debts-list'
 import { GroupBalance } from 'modules/group/ui/group-balance'
 import { AddUserForm } from 'modules/group/ui/add-user-form'
+import { AddExpenseForm, ExpenseFormData } from 'modules/group/ui/add-expense-form'
 
 function App() {
   const [groupData, setGroupData] = useState({} as Group)
@@ -39,20 +40,11 @@ function App() {
     body: [],
   })
   const [showExpenseForm, setShowExpenseForm] = useState(false)
-  const [expenseFormData, setExpenseFormData] = useState({
-    payerName: 'Marcel',
-    payerId: 1,
-    description: '',
-    amount: 0,
-    date: '',
-  })
+
   const [showUserForm, setShowUserForm] = useState(false)
-  const [newUserName, setNewUserName] = useState('')
 
   const [balance, setBalance] = useState<Map<User, number> | null>(null)
   const [debts, setDebts] = useState([] as Debt[])
-
-  const today = new Date().toISOString().split('T')[0]
 
   //TODO: Mover datos mockeados a otra capa infra
   const testGroup: Group = {
@@ -102,15 +94,10 @@ function App() {
       if (group?.members?.size === 0) {
         const updatedTableData = await getGroup(localStorageGroupRepository)
         setGroupData(updatedTableData!)
-        clearExpenseForm()
         setShowExpenseForm(false)
       }
     })
   }, [])
-
-  useEffect(() => {
-    console.log('Ahora balance es : ', balance)
-  }, [balance])
 
   useEffect(() => {
     if (!groupData) return
@@ -141,13 +128,12 @@ function App() {
     if (showUserForm) setShowExpenseForm(false)
   }, [showUserForm])
 
-  const handleExpenseFormSubmit = async (e: SyntheticEvent) => {
+  const handleExpenseFormSubmit = async (e: SyntheticEvent, expenseFormData: ExpenseFormData) => {
     try {
       e.preventDefault()
       await addExpense(localStorageGroupRepository, groupData, expenseFormData)
       const updatedTableData = await getGroup(localStorageGroupRepository)
       setGroupData(updatedTableData!)
-      clearExpenseForm()
       setShowExpenseForm(false)
     } catch (error) {
       alert(error)
@@ -155,18 +141,7 @@ function App() {
   }
 
   const handleExpenseFormCancel = () => {
-    clearExpenseForm()
     setShowExpenseForm(false)
-  }
-
-  const clearExpenseForm = () => {
-    setExpenseFormData({
-      payerName: 'Marcel',
-      payerId: 1,
-      description: '',
-      amount: 0,
-      date: '',
-    })
   }
 
   const handleUserFormSubmit = async (username: string) => {
@@ -175,7 +150,6 @@ function App() {
       await addMember(localStorageGroupRepository, groupData, newUser)
       const updatedTableData = await getGroup(localStorageGroupRepository)
       setGroupData(updatedTableData!)
-      clearUserForm()
       setShowUserForm(false)
     } catch (error) {
       alert(error)
@@ -193,12 +167,7 @@ function App() {
   }
 
   const handleUserFormCancel = () => {
-    clearUserForm()
     setShowUserForm(false)
-  }
-
-  const clearUserForm = () => {
-    setNewUserName('')
   }
 
   return (
@@ -208,55 +177,13 @@ function App() {
       {(showExpenseForm || showUserForm) && (
         <section className="forms">
           {showExpenseForm && (
-            <form className="expense-form">
-              <h3>Añadir gasto</h3>
-              <label>Descripción:</label>
-              <input
-                type="text"
-                value={expenseFormData.description}
-                onChange={e =>
-                  setExpenseFormData({
-                    ...expenseFormData,
-                    description: e.target.value,
-                  })
-                }
-              />
-              <label>Cantidad:</label>
-              <input
-                type="number"
-                value={expenseFormData.amount}
-                onChange={e =>
-                  setExpenseFormData({
-                    ...expenseFormData,
-                    amount: +e.target.value,
-                  })
-                }
-              />
-              <label htmlFor="datepicker">Selecciona una fecha:</label>
-              <input
-                type="date"
-                id="datepicker"
-                value={expenseFormData.date}
-                max={today}
-                onChange={e =>
-                  setExpenseFormData({
-                    ...expenseFormData,
-                    date: e.target.value,
-                  })
-                }
-              />
-              <section className="expense-form-buttons">
-                <button onClick={handleExpenseFormSubmit}>Enviar</button>
-                <button onClick={handleExpenseFormCancel}>Cancelar</button>
-              </section>
-            </form>
+            <AddExpenseForm handleSubmitForm={handleExpenseFormSubmit} handleCancelForm={handleExpenseFormCancel} />
           )}
           {showUserForm && (
             <AddUserForm
               groupData={groupData}
               submitHandler={handleUserFormSubmit}
               cancelHandler={handleUserFormCancel}
-              onUserNameChange={() => setNewUserName}
               setShowUserForm={setShowUserForm}
             />
           )}

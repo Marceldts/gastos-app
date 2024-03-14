@@ -8,7 +8,6 @@ interface AddUserFormProps {
   groupData: Group
   submitHandler: (username: string) => void
   cancelHandler: () => void
-  onUserNameChange: () => void
   setShowUserForm: (value: boolean) => void
 }
 
