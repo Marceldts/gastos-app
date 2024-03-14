@@ -1,18 +1,21 @@
 import { CustomTable } from 'shared/ui/components/03_templates/table/CustomTable'
 import { SyntheticEvent, useEffect, useState } from 'react'
-import { Group } from 'group/domain/Group'
-import { getGroup } from 'group/application/get/getGroup'
-import { GroupRepository } from 'group/domain/Group.repository'
-import { localStorageGroupRepository } from 'group/infrastructure/repositories/LocalStorageGroup.repository'
+import { Group } from 'modules/group/domain/Group'
+import { getGroup } from 'modules/group/application/get/getGroup'
+import { GroupRepository } from 'modules/group/domain/Group.repository'
+import { localStorageGroupRepository } from 'modules/group/infrastructure/repositories/LocalStorageGroup.repository'
 import './App.css'
-import { addExpense } from 'expense/application/add/addExpense'
-import { addMember } from 'group/application/add/addMember'
-import { getGroupDebt } from 'group/application/get/getGroupDebt'
-import { User } from 'user/domain/User'
-import { getGroupBalance } from 'group/application/get/getGroupBalance'
-import { saveGroup } from 'group/application/save/saveGroup'
-import { Debt } from 'debt/domain/Debt'
-import { Expense } from 'expense/domain/Expense'
+import { addExpense } from 'modules/expense/application/add/addExpense'
+import { addMember } from 'modules/group/application/add/addMember'
+import { getGroupDebt } from 'modules/group/application/get/getGroupDebt'
+import { User } from 'modules/user/domain/User'
+import { getGroupBalance } from 'modules/group/application/get/getGroupBalance'
+import { saveGroup } from 'modules/group/application/save/saveGroup'
+import { Debt } from 'modules/debt/domain/Debt'
+import { Expense } from 'modules/expense/domain/Expense'
+import { DebtList } from 'modules/debt/ui/debts-list'
+import { GroupBalance } from 'modules/group/ui/group-balance'
+import { AddUserForm } from 'modules/group/ui/add-user-form'
 
 function App() {
   const [groupData, setGroupData] = useState({} as Group)
@@ -106,6 +109,10 @@ function App() {
   }, [])
 
   useEffect(() => {
+    console.log('Ahora balance es : ', balance)
+  }, [balance])
+
+  useEffect(() => {
     if (!groupData) return
     if (groupData.expenseList?.size !== 0) {
       const expenseList = Array.from(groupData.expenseList ?? [])
@@ -162,10 +169,9 @@ function App() {
     })
   }
 
-  const handleUserFormSubmit = async (e: SyntheticEvent) => {
+  const handleUserFormSubmit = async (username: string) => {
     try {
-      e.preventDefault()
-      const newUser = { name: newUserName, balance: 0, id: getNewUserId() }
+      const newUser = { name: username, balance: 0, id: getNewUserId() }
       await addMember(localStorageGroupRepository, groupData, newUser)
       const updatedTableData = await getGroup(localStorageGroupRepository)
       setGroupData(updatedTableData!)
@@ -246,43 +252,20 @@ function App() {
             </form>
           )}
           {showUserForm && (
-            <form className="user-form">
-              <h3>Añadir miembro al grupo</h3>
-              <label>Nombre de usuario:</label>
-              <input type="text" value={newUserName} onChange={e => setNewUserName(e.target.value)} />
-              <section className="user-form-buttons">
-                <button onClick={handleUserFormSubmit}>Enviar</button>
-                <button onClick={handleUserFormCancel}>Cancelar</button>
-              </section>
-            </form>
+            <AddUserForm
+              groupData={groupData}
+              submitHandler={handleUserFormSubmit}
+              cancelHandler={handleUserFormCancel}
+              onUserNameChange={() => setNewUserName}
+              setShowUserForm={setShowUserForm}
+            />
           )}
         </section>
       )}
-      {balance && (
-        <section className="balance">
-          <h3>Balance del grupo</h3>
-          <ul>
-            {Array.from(balance).map(([user, balance]) => (
-              <li key={user.id} className={balance >= 0 ? 'positive-balance' : 'negative-balance'}>
-                {user.name}:{' '}
-                <span className={balance >= 0 ? 'positive-number' : 'negative-number'}>{balance.toFixed(2)}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-      {debts.length > 0 && (
-        <section className="debts">
-          <h3>Deudas</h3>
-          <ul>
-            {debts.map((debt, index) => (
-              <li key={index}>
-                {debt.debtor.name} le debe a {debt.creditor.name}: {debt.amount}
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+
+      <GroupBalance balance={balance} />
+
+      <DebtList debts={debts} />
     </div>
   )
 }
