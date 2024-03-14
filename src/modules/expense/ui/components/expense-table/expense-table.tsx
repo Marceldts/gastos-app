@@ -9,6 +9,8 @@ export interface ExpenseTableProps {
     }
     body: (string | number)[][]
   }
+  setShowExpenseForm: (show: boolean) => void
+  setShowUserForm: (show: boolean) => void
 }
 
 export const ExpenseTable = ({ tableData }: ExpenseTableProps) => {

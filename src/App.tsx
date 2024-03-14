@@ -17,32 +17,17 @@ import { DebtList } from 'modules/debt/ui/debts-list'
 import { GroupBalance } from 'modules/group/ui/group-balance'
 import { AddUserForm } from 'modules/group/ui/add-user-form'
 import { AddExpenseForm, ExpenseFormData } from 'modules/group/ui/add-expense-form'
-import { ExpenseTable } from 'modules/expense/ui/expense-table'
+import { ExpenseTable } from 'modules/expense/ui/components/expense-table/expense-table'
+import { useExpenseTableData } from 'modules/expense/ui/hooks/useExpenseTableData'
+import { useShowUserForm } from 'shared/ui/hooks/use-show-user-form'
+import { useShowExpenseForm } from 'shared/ui/hooks/use-show-expense-form'
 
 function App() {
   const [groupData, setGroupData] = useState({} as Group)
-  const [tableData, setTableData] = useState<{
-    header: {
-      text: string
-      buttons: { text: string; onPress: () => void }[]
-    }
-    body: (string | number)[][]
-  }>({
-    header: {
-      text: 'Gastos',
-      buttons: [
-        { text: 'Añadir gasto', onPress: () => setShowExpenseForm(true) },
-        {
-          text: 'Añadir miembro al grupo',
-          onPress: () => setShowUserForm(true),
-        },
-      ],
-    },
-    body: [],
-  })
-  const [showExpenseForm, setShowExpenseForm] = useState(false)
 
-  const [showUserForm, setShowUserForm] = useState(false)
+  const { showUserForm, setShowUserForm } = useShowUserForm()
+  const { showExpenseForm, setShowExpenseForm } = useShowExpenseForm()
+  const { tableData } = useExpenseTableData(groupData, setShowExpenseForm, setShowUserForm)
 
   const [balance, setBalance] = useState<Map<User, number> | null>(null)
   const [debts, setDebts] = useState([] as Debt[])
@@ -101,24 +86,9 @@ function App() {
   }, [])
 
   useEffect(() => {
-    if (!groupData) return
-    if (groupData.expenseList?.size !== 0) {
-      const expenseList = Array.from(groupData.expenseList ?? [])
-      const updatedTableData = {
-        ...tableData,
-        body: expenseList
-          .sort((a, b) => b.date.localeCompare(a.date))
-          .map(expense => [expense.payerName, expense.description, expense.amount, expense.date]),
-      }
-      setTableData(updatedTableData)
-      getGroupBalance(repository, groupData).then(groupBalance => {
-        setBalance(groupBalance)
-        //TODO: Corregir el error que se produce al intentar obtener las deudas (sobreescribe el balance y lo setea a 0)
-        // if (!groupData.members && !debts) getGroupDebt(repository, groupData).then((debts: Debt[]) => {
-        //   setDebts(debts);
-        // });
-      })
-    }
+    getGroupBalance(repository, groupData).then(groupBalance => {
+      setBalance(groupBalance)
+    })
   }, [groupData])
 
   useEffect(() => {
@@ -173,7 +143,7 @@ function App() {
 
   return (
     <div className="App">
-      <ExpenseTable tableData={tableData} />
+      <ExpenseTable tableData={tableData} setShowUserForm={setShowUserForm} setShowExpenseForm={setShowExpenseForm} />
       {(showExpenseForm || showUserForm) && (
         <section className="forms">
           {showExpenseForm && (
