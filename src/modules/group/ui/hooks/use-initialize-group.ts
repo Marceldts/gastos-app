@@ -12,7 +12,7 @@ export const useInitializeGroup = function (
   setBalance: (balance: Map<User, number> | null) => void,
   setShowExpenseForm: (show: boolean) => void,
 ) {
-  const repository = localStorageGroupRepository
+  const repository: GroupRepository = localStorageGroupRepository
   const testGroup: Group = {
     members: new Set([
       { name: 'Marcel', balance: 59.15, id: 1 },
@@ -46,20 +46,17 @@ export const useInitializeGroup = function (
   }
 
   useEffect(() => {
-    const _getGroupWhenInit = async (repository: GroupRepository) => {
+    const _getGroupWhenInit = async () => {
       const group = await getGroup(repository)
       setBalance(await getGroupBalance(localStorageGroupRepository, group!))
       setGroupData(group?.expenseList?.size === 0 && group.members.size === 0 ? testGroup : group!)
       await saveGroup(repository, group?.expenseList?.size === 0 && group.members.size === 0 ? testGroup : group!)
-      return group
-    }
-
-    _getGroupWhenInit(repository).then(async group => {
       if (group?.members?.size === 0) {
         const updatedTableData = await getGroup(localStorageGroupRepository)
         setGroupData(updatedTableData!)
         setShowExpenseForm(false)
       }
-    })
-  }, [])
+    }
+    _getGroupWhenInit()
+  }, [repository])
 }

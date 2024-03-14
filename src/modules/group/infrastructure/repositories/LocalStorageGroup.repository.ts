@@ -33,6 +33,10 @@ export const localStorageGroupRepository: GroupRepository = {
   /*
         TODO: Aplicar ley demeter
     */
+
+  /*
+    TODO: Mover addExpense y addMember al dominio de grupo
+  */
   addExpense: async function (group: Group, expense: Expense): Promise<void> {
     group.expenseList.add(expense)
     let payerFound = false
