@@ -1,57 +1,33 @@
 import { User } from 'modules/user/domain/User'
 import { Group, ensureIsGroupValid, getGroupBalance } from 'modules/group/domain/Group'
+import { GroupMother } from 'modules/group/domain/GroupMother'
+import { UserMother } from 'modules/user/domain/UserMother'
 
 describe('ensureIsGroupValid', () => {
   test('valid group', () => {
-    const validMockedGroup: Group = {
-      expenseList: new Set(),
-      members: new Set(),
-    }
+    const validMockedGroup: Group = GroupMother.valid()
+
     expect(() => ensureIsGroupValid(validMockedGroup)).not.toThrow()
   })
 })
 
 describe('isGroupNotValid', () => {
   test('members list has duplicate ids', () => {
-    const invalidUser1: User = {
-      id: 1,
-      name: 'Test user 1',
-      balance: 0,
-    }
-    const invalidUser2: User = {
-      id: 1,
-      name: 'Test user 2',
-      balance: 0,
-    }
-    const invalidMockedGroup: Group = {
-      expenseList: new Set(),
-      members: new Set([invalidUser1, invalidUser2]),
-    }
+    const invalidUser1: User = UserMother.withInvalidId()
+    const invalidUser2: User = UserMother.withInvalidId()
+    const invalidMockedGroup: Group = GroupMother.withMembers(new Set([invalidUser1, invalidUser2]))
+
     expect(() => ensureIsGroupValid(invalidMockedGroup)).toThrow('\nMembers list has duplicate ids.\n')
   })
   test('cannot have expenses without members', () => {
-    const invalidMockedGroup: Group = {
-      expenseList: new Set([
-        {
-          payerId: 1,
-          payerName: 'Test',
-          amount: 100,
-          description: 'Test expense',
-          date: '2022-01-28',
-        },
-      ]),
-      members: new Set(),
-    }
+    const invalidMockedGroup: Group = GroupMother.invalidWithExpensesWithoutMembers()
     expect(() => ensureIsGroupValid(invalidMockedGroup)).toThrow('\nCannot have expenses without members.\n')
   })
 })
 
 describe('getGroupBalance', () => {
   test('if the group is empty, getGroupBalance should return an empty map', async () => {
-    const group: Group = {
-      expenseList: new Set(),
-      members: new Set(),
-    }
+    const group: Group = GroupMother.empty()
 
     const balance = getGroupBalance(group)
 
@@ -59,8 +35,8 @@ describe('getGroupBalance', () => {
   })
 
   test('if the group is not empty, getGroupBalance should return a map with the members and their balance', async () => {
-    const member1 = { name: 'Test user 1', balance: 10, id: 1 }
-    const member2 = { name: 'Test user 2', balance: -10, id: 2 }
+    const member1 = UserMother.validWithIdAndBalance(1, 10)
+    const member2 = UserMother.validWithIdAndBalance(2, -10)
     const group: Group = {
       expenseList: new Set(),
       members: new Set([member1, member2]),

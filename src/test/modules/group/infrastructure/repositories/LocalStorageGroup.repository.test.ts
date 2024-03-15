@@ -1,6 +1,9 @@
+import { ExpenseMother } from 'modules/expense/domain/ExpenseMother'
 import { Group } from 'modules/group/domain/Group'
 import { GroupRepository } from 'modules/group/domain/Group.repository'
+import { GroupMother } from 'modules/group/domain/GroupMother'
 import { localStorageGroupRepository } from 'modules/group/infrastructure/repositories/LocalStorageGroup.repository'
+import { UserMother } from 'modules/user/domain/UserMother'
 
 describe('local storage group repository implementation', () => {
   let repository: GroupRepository
@@ -20,11 +23,9 @@ describe('local storage group repository implementation', () => {
     test('getGroup should return an empty group if there is no group in local storage', async () => {
       getItemMock.mockReturnValueOnce(JSON.stringify(undefined))
       repository = localStorageGroupRepository
+      const emptyGroup = GroupMother.empty()
       const group = await repository.getGroup()
-      expect(group).toEqual({
-        members: new Set(),
-        expenseList: new Set(),
-      })
+      expect(group).toEqual(emptyGroup)
     })
 
     test('getGroup should return the group from local storage if there is one', async () => {
@@ -32,10 +33,7 @@ describe('local storage group repository implementation', () => {
         members: [],
         expenseList: [],
       }
-      const mockedGroup = {
-        members: new Set(),
-        expenseList: new Set(),
-      }
+      const mockedGroup = GroupMother.empty()
       getItemMock.mockReturnValueOnce(JSON.stringify(mockedSerializedGroup))
       repository = localStorageGroupRepository
       const group = await repository.getGroup()
@@ -61,18 +59,7 @@ describe('local storage group repository implementation', () => {
     })
 
     test('saveGroup should save the group in local storage', async () => {
-      const groupToSave: Group = {
-        expenseList: new Set([
-          {
-            payerId: 1,
-            payerName: 'Test',
-            amount: 100,
-            description: 'Test expense',
-            date: '2022-01-28',
-          },
-        ]),
-        members: new Set([{ name: 'Test user', balance: 0, id: 1 }]),
-      }
+      const groupToSave: Group = GroupMother.valid()
 
       const repository = localStorageGroupRepository
 
@@ -94,12 +81,7 @@ describe('local storage group repository implementation', () => {
 
       repository = localStorageGroupRepository
 
-      await expect(
-        repository.saveGroup({
-          expenseList: new Set(),
-          members: new Set(),
-        }),
-      ).rejects.toThrow(mockedError)
+      await expect(repository.saveGroup(GroupMother.empty())).rejects.toThrow(mockedError)
     })
   })
 
@@ -111,17 +93,9 @@ describe('local storage group repository implementation', () => {
     })
 
     test('addExpense should add the expense to the group and save it', async () => {
-      const group: Group = {
-        expenseList: new Set(),
-        members: new Set([{ name: 'Test user', balance: 0, id: 1 }]),
-      }
-      const expense = {
-        payerId: 1,
-        payerName: 'Test',
-        amount: 100,
-        description: 'Test expense',
-        date: '2022-01-28',
-      }
+      const user = UserMother.validWithIdAndBalance(1, 0)
+      const group: Group = GroupMother.withMembers(new Set([user]))
+      const expense = ExpenseMother.validWithPayerIdAndAmount(1, 100)
 
       saveGroupMock.mockResolvedValueOnce(() => {})
 
@@ -136,21 +110,10 @@ describe('local storage group repository implementation', () => {
         throw mockedError
       })
 
-      await expect(
-        localStorageGroupRepository.addExpense(
-          {
-            expenseList: new Set(),
-            members: new Set(),
-          },
-          {
-            payerId: 1,
-            payerName: 'Test',
-            amount: 100,
-            description: 'Test expense',
-            date: '2022-01-28',
-          },
-        ),
-      ).rejects.toThrow(mockedError)
+      const group: Group = GroupMother.empty()
+      const expense = ExpenseMother.validWithPayerIdAndAmount(1, 100)
+
+      await expect(localStorageGroupRepository.addExpense(group, expense)).rejects.toThrow(mockedError)
     })
   })
 
@@ -162,11 +125,8 @@ describe('local storage group repository implementation', () => {
     })
 
     test('addMember should add the member to the group and save it', async () => {
-      const group: Group = {
-        expenseList: new Set(),
-        members: new Set(),
-      }
-      const member = { name: 'Test user', balance: 0, id: 1 }
+      const group: Group = GroupMother.empty()
+      const member = UserMother.validWithId(100)
 
       saveGroupMock.mockResolvedValueOnce(() => {})
 
@@ -181,15 +141,10 @@ describe('local storage group repository implementation', () => {
         throw mockedError
       })
 
-      await expect(
-        localStorageGroupRepository.addMember(
-          {
-            expenseList: new Set(),
-            members: new Set(),
-          },
-          { name: 'Test user', balance: 0, id: 1 },
-        ),
-      ).rejects.toThrow(mockedError)
+      const group: Group = GroupMother.empty()
+      const member = UserMother.validWithId(100)
+
+      await expect(localStorageGroupRepository.addMember(group, member)).rejects.toThrow(mockedError)
     })
   })
 })
