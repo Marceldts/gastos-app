@@ -1,7 +1,7 @@
 import { User } from 'modules/user/domain/User'
 import { Group, ensureIsGroupValid, getGroupBalance } from 'modules/group/domain/Group'
-import { GroupMother } from 'modules/group/domain/GroupMother'
-import { UserMother } from 'modules/user/domain/UserMother'
+import { GroupMother } from 'test/modules/group/domain/GroupMother'
+import { UserMother } from 'test/modules/user/domain/UserMother'
 
 describe('ensureIsGroupValid', () => {
   test('valid group', () => {

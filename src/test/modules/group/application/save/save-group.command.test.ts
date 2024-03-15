@@ -2,8 +2,8 @@ import { saveGroupCommand } from 'modules/group/application/save/save-group.comm
 import { Group } from 'modules/group/domain/Group'
 import { User } from 'modules/user/domain/User'
 import { groupRepositoryMock } from 'test/mocks/groupRepository.mock'
-import { UserMother } from 'modules/user/domain/UserMother'
-import { GroupMother } from 'modules/group/domain/GroupMother'
+import { UserMother } from 'test/modules/user/domain/UserMother'
+import { GroupMother } from 'test/modules/group/domain/GroupMother'
 
 describe('saveGroup', () => {
   const repository = groupRepositoryMock

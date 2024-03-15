@@ -1,9 +1,9 @@
-import { ExpenseMother } from 'modules/expense/domain/ExpenseMother'
+import { ExpenseMother } from 'test/modules/expense/domain/ExpenseMother'
 import { Group } from 'modules/group/domain/Group'
 import { GroupRepository } from 'modules/group/domain/Group.repository'
-import { GroupMother } from 'modules/group/domain/GroupMother'
+import { GroupMother } from 'test/modules/group/domain/GroupMother'
 import { localStorageGroupRepository } from 'modules/group/infrastructure/repositories/LocalStorageGroup.repository'
-import { UserMother } from 'modules/user/domain/UserMother'
+import { UserMother } from 'test/modules/user/domain/UserMother'
 
 describe('local storage group repository implementation', () => {
   let repository: GroupRepository

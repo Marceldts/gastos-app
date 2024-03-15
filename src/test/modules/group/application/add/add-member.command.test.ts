@@ -2,8 +2,8 @@ import { User } from 'modules/user/domain/User'
 import { Group } from 'modules/group/domain/Group'
 import { groupRepositoryMock } from 'test/mocks/groupRepository.mock'
 import { addMemberCommand } from 'modules/group/application/add/add-member.command'
-import { GroupMother } from 'modules/group/domain/GroupMother'
-import { UserMother } from 'modules/user/domain/UserMother'
+import { GroupMother } from 'test/modules/group/domain/GroupMother'
+import { UserMother } from 'test/modules/user/domain/UserMother'
 
 describe('Add member', () => {
   const repository = groupRepositoryMock

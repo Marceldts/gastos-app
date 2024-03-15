@@ -1,8 +1,8 @@
 import { User } from 'modules/user/domain/User'
-import { Group } from './Group'
+import { Group } from '../../../../modules/group/domain/Group'
 import { Expense } from 'modules/expense/domain/Expense'
-import { ExpenseMother } from 'modules/expense/domain/ExpenseMother'
-import { UserMother } from 'modules/user/domain/UserMother'
+import { ExpenseMother } from 'test/modules/expense/domain/ExpenseMother'
+import { UserMother } from 'test/modules/user/domain/UserMother'
 
 export class GroupMother {
   static empty(): Group {
