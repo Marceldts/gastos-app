@@ -61,15 +61,6 @@ export const localStorageGroupRepository: GroupRepository = {
     group.members.add(member)
     await this.saveGroup(group)
   },
-  getGroupBalance: async function ({ members }: Group): Promise<Map<User, number> | null> {
-    if (!members) return null
-    const groupBalance = new Map<User, number>()
-
-    Array.from(members).forEach(member => {
-      groupBalance.set(member, member.balance)
-    })
-    return groupBalance
-  },
   getGroupDebts: async function ({ members }: Group): Promise<Debt[]> {
     const sortedUsers = Array.from(members).sort((a, b) => a.balance - b.balance)
     const debts: Debt[] = []

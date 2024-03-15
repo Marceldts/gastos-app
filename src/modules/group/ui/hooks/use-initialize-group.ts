@@ -48,7 +48,7 @@ export const useInitializeGroup = function (
   useEffect(() => {
     const _getGroupWhenInit = async () => {
       const group = await getGroupQuery(repository).execute()
-      setBalance(await getGroupBalanceQuery(localStorageGroupRepository).execute(group!))
+      setBalance(await getGroupBalanceQuery().execute(group!))
       setGroupData(group?.expenseList?.size === 0 && group.members.size === 0 ? testGroup : group!)
       await saveGroupCommand(repository).execute(
         group?.expenseList?.size === 0 && group.members.size === 0 ? testGroup : group!,

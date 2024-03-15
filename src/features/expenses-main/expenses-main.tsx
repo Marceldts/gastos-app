@@ -31,7 +31,7 @@ export const ExpensesMain = () => {
   const repository: GroupRepository = localStorageGroupRepository
 
   useEffect(() => {
-    getGroupBalanceQuery(repository)
+    getGroupBalanceQuery()
       .execute(groupData)
       .then(groupBalance => {
         setBalance(groupBalance)

@@ -5,7 +5,6 @@ import { Command } from 'shared/application/usecase/command'
 
 /*
 TODO: 
-    1- Separar dependencias y argumentos de entrada del caso de uso
     3- GroupRepository tiene lógica de diferentes entidades de dominio
 */
 export const addExpenseCommand = (

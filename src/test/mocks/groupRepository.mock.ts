@@ -12,13 +12,5 @@ export const groupRepositoryMock: GroupRepository = {
   saveGroup: jest.fn(),
   addExpense: jest.fn(),
   addMember: jest.fn(),
-  getGroupBalance: jest.fn(() =>
-    Promise.resolve(
-      new Map<User, number>([
-        [{ name: 'test1', balance: 0, id: 1 }, 0],
-        [{ name: 'test2', balance: 0, id: 1 }, 0],
-      ]),
-    ),
-  ),
   getGroupDebts: jest.fn(),
 }
