@@ -49,11 +49,11 @@ export const useInitializeGroup = function (
     const _getGroupWhenInit = async () => {
       const group = await getGroupQuery(repository).execute()
       setBalance(await getGroupBalanceQuery().execute(group!))
-      setGroupData(group?.expenseList?.size === 0 && group.members.size === 0 ? testGroup : group!)
+      setGroupData(group.expenseList.size === 0 && group.members.size === 0 ? testGroup : group)
       await saveGroupCommand(repository).execute(
-        group?.expenseList?.size === 0 && group.members.size === 0 ? testGroup : group!,
+        group.expenseList.size === 0 && group.members.size === 0 ? testGroup : group,
       )
-      if (group?.members?.size === 0) {
+      if (group.members.size === 0) {
         const updatedTableData = await getGroupQuery(localStorageGroupRepository).execute()
         setGroupData(updatedTableData!)
         setShowExpenseForm(false)

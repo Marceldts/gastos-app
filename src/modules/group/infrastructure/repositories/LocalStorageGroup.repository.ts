@@ -6,7 +6,7 @@ import { User } from 'modules/user/domain/User'
 
 export const localStorageGroupRepository: GroupRepository = {
   //We have to convert the Arrays to Sets because the Set object is not serializable, and thus, cannot be saved in localStorage.
-  getGroup: async function (): Promise<Group | undefined> {
+  getGroup: async function (): Promise<Group> {
     const stringifiedGroup = localStorage.getItem('group')
     if (stringifiedGroup) {
       const parsedGroup = JSON.parse(stringifiedGroup)
