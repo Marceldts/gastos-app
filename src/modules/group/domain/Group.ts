@@ -14,18 +14,6 @@ export const ensureIsGroupValid = ({ members, expenseList }: Group): void => {
   if (errorMessage.length > 0) throw new Error('\n' + errorMessage)
 }
 
-/*
-getGroupBalance: async function ({ members }: Group): Promise<Map<User, number> | null> {
-    if (!members) return null
-    const groupBalance = new Map<User, number>()
-
-    Array.from(members).forEach(member => {
-      groupBalance.set(member, member.balance)
-    })
-    return groupBalance
-  },
-*/
-
 export const getGroupBalance = ({ members }: Group): Map<User, number> | null => {
   if (!members) return null
   const groupBalance = new Map<User, number>()
@@ -34,6 +22,25 @@ export const getGroupBalance = ({ members }: Group): Map<User, number> | null =>
     groupBalance.set(member, member.balance)
   })
   return groupBalance
+}
+
+export const addExpenseToGroup = (group: Group, expense: Expense): void => {
+  group.expenseList.add(expense)
+  let payerFound = false
+  const totalReceivers = group.members.size
+  const amountPerReceiver = expense.amount / totalReceivers
+
+  group.members.forEach(user => {
+    if (user.id === expense.payerId) {
+      payerFound = true
+      user.balance += expense.amount
+    }
+    user.balance -= amountPerReceiver
+  })
+
+  if (!payerFound) {
+    throw new Error('No se encontró al pagador en el conjunto de usuarios.')
+  }
 }
 
 const _everyMemberHasUniqueIds = (members: Set<User>): boolean => {

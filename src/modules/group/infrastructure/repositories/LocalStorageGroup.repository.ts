@@ -1,6 +1,6 @@
 import { Debt } from 'modules/debt/domain/Debt'
 import { Expense } from 'modules/expense/domain/Expense'
-import { Group, ensureIsGroupValid } from 'modules/group/domain/Group'
+import { Group, addExpenseToGroup } from 'modules/group/domain/Group'
 import { GroupRepository } from 'modules/group/domain/Group.repository'
 import { User } from 'modules/user/domain/User'
 
@@ -38,23 +38,7 @@ export const localStorageGroupRepository: GroupRepository = {
     TODO: Mover addExpense y addMember al dominio de grupo
   */
   addExpense: async function (group: Group, expense: Expense): Promise<void> {
-    group.expenseList.add(expense)
-    let payerFound = false
-    const totalReceivers = group.members.size
-    const amountPerReceiver = expense.amount / totalReceivers
-
-    group.members.forEach(user => {
-      if (user.id === expense.payerId) {
-        payerFound = true
-        user.balance += expense.amount
-      }
-      user.balance -= amountPerReceiver
-    })
-
-    if (!payerFound) {
-      throw new Error('No se encontró al pagador en el conjunto de usuarios.')
-    }
-
+    addExpenseToGroup(group, expense)
     this.saveGroup(group)
   },
   addMember: async function (group: Group, member: User): Promise<void> {
