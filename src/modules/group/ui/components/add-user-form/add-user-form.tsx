@@ -1,4 +1,4 @@
-import { addMember } from 'modules/group/application/add/addMember'
+import { addMember } from 'modules/group/application/add/add-member.command'
 import { getGroup } from 'modules/group/application/get/getGroup'
 import { Group } from 'modules/group/domain/Group'
 import { localStorageGroupRepository } from 'modules/group/infrastructure/repositories/LocalStorageGroup.repository'
