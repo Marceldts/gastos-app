@@ -1,7 +1,7 @@
 import '../../App.css'
 import { SyntheticEvent, useEffect, useState } from 'react'
 import { Group } from 'modules/group/domain/Group'
-import { getGroup } from 'modules/group/application/get/getGroup'
+import { getGroupQuery } from 'modules/group/application/get/get-group.query'
 import { GroupRepository } from 'modules/group/domain/Group.repository'
 import { localStorageGroupRepository } from 'modules/group/infrastructure/repositories/LocalStorageGroup.repository'
 import { addExpense } from 'modules/expense/application/add/addExpense'
@@ -50,7 +50,7 @@ export const ExpensesMain = () => {
     try {
       e.preventDefault()
       await addExpense(localStorageGroupRepository, groupData, expenseFormData)
-      const updatedTableData = await getGroup(localStorageGroupRepository)
+      const updatedTableData = await getGroupQuery(localStorageGroupRepository).execute()
       setGroupData(updatedTableData!)
       setShowExpenseForm(false)
     } catch (error) {
@@ -69,7 +69,7 @@ export const ExpensesMain = () => {
       // await addMember(localStorageGroupRepository, groupData, newUser)
       //Así llamo ahora al caso de uso
       await addMemberCommand(localStorageGroupRepository).execute({ group: groupData, member: newUser })
-      const updatedTableData = await getGroup(localStorageGroupRepository)
+      const updatedTableData = await getGroupQuery(localStorageGroupRepository).execute()
       setGroupData(updatedTableData!)
       setShowUserForm(false)
     } catch (error) {
