@@ -5,7 +5,7 @@ import { getGroup } from 'modules/group/application/get/getGroup'
 import { GroupRepository } from 'modules/group/domain/Group.repository'
 import { localStorageGroupRepository } from 'modules/group/infrastructure/repositories/LocalStorageGroup.repository'
 import { addExpense } from 'modules/expense/application/add/addExpense'
-import { addMember } from 'modules/group/application/add/addMember'
+import { addMember, addMemberCommand } from 'modules/group/application/add/addMember'
 import { User } from 'modules/user/domain/User'
 import { getGroupBalance } from 'modules/group/application/get/getGroupBalance'
 import { Debt } from 'modules/debt/domain/Debt'
@@ -65,7 +65,10 @@ function App() {
   const handleUserFormSubmit = async (username: string) => {
     try {
       const newUser = { name: username, balance: 0, id: _getNewUserId() }
-      await addMember(localStorageGroupRepository, groupData, newUser)
+      //Así llamaba antes al caso de uso
+      // await addMember(localStorageGroupRepository, groupData, newUser)
+      //Así llamo ahora al caso de uso
+      await addMemberCommand(localStorageGroupRepository).execute({ group: groupData, member: newUser })
       const updatedTableData = await getGroup(localStorageGroupRepository)
       setGroupData(updatedTableData!)
       setShowUserForm(false)
