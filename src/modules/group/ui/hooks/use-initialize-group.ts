@@ -1,6 +1,6 @@
 import { getGroupQuery } from 'modules/group/application/get/get-group.query'
 import { getGroupBalanceQuery } from 'modules/group/application/get/get-group-balance.query'
-import { saveGroup } from 'modules/group/application/save/saveGroup'
+import { saveGroupCommand } from 'modules/group/application/save/save-group.command'
 import { Group } from 'modules/group/domain/Group'
 import { GroupRepository } from 'modules/group/domain/Group.repository'
 import { localStorageGroupRepository } from 'modules/group/infrastructure/repositories/LocalStorageGroup.repository'
@@ -50,7 +50,9 @@ export const useInitializeGroup = function (
       const group = await getGroupQuery(repository).execute()
       setBalance(await getGroupBalanceQuery(localStorageGroupRepository).execute(group!))
       setGroupData(group?.expenseList?.size === 0 && group.members.size === 0 ? testGroup : group!)
-      await saveGroup(repository, group?.expenseList?.size === 0 && group.members.size === 0 ? testGroup : group!)
+      await saveGroupCommand(repository).execute(
+        group?.expenseList?.size === 0 && group.members.size === 0 ? testGroup : group!,
+      )
       if (group?.members?.size === 0) {
         const updatedTableData = await getGroupQuery(localStorageGroupRepository).execute()
         setGroupData(updatedTableData!)

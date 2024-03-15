@@ -1,4 +1,4 @@
-import { saveGroup } from 'modules/group/application/save/saveGroup'
+import { saveGroupCommand } from 'modules/group/application/save/save-group.command'
 import { Expense } from 'modules/expense/domain/Expense'
 import { Group } from 'modules/group/domain/Group'
 import { User } from 'modules/user/domain/User'
@@ -9,7 +9,7 @@ describe('saveGroup', () => {
 
   it('setGroup use case should call the repository setGroup method when the group is valid', async () => {
     const group = { members: new Set<User>(), expenseList: new Set<Expense>() }
-    expect(async () => await saveGroup(repository, group)).not.toThrow()
+    expect(async () => await saveGroupCommand(repository).execute(group)).not.toThrow()
   })
 
   it('setGroup use case should not call the repository setGroup method when the group is not valid', async () => {
@@ -27,6 +27,6 @@ describe('saveGroup', () => {
       expenseList: new Set(),
       members: new Set([invalidUser1, invalidUser2]),
     }
-    await expect(async () => await saveGroup(repository, invalidMockedGroup)).rejects.toThrow()
+    await expect(async () => await saveGroupCommand(repository).execute(invalidMockedGroup)).rejects.toThrow()
   })
 })
