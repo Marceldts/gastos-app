@@ -4,7 +4,7 @@ import { Group } from 'modules/group/domain/Group'
 import { getGroupQuery } from 'modules/group/application/get/get-group.query'
 import { GroupRepository } from 'modules/group/domain/Group.repository'
 import { localStorageGroupRepository } from 'modules/group/infrastructure/repositories/LocalStorageGroup.repository'
-import { addExpense } from 'modules/expense/application/add/addExpense'
+import { addExpenseCommand } from 'modules/expense/application/add/add-expense.command'
 import { addMemberCommand } from 'modules/group/application/add/add-member.command'
 import { User } from 'modules/user/domain/User'
 import { getGroupBalanceQuery } from 'modules/group/application/get/get-group-balance.query'
@@ -51,7 +51,7 @@ export const ExpensesMain = () => {
   const handleExpenseFormSubmit = async (e: SyntheticEvent, expenseFormData: ExpenseFormData) => {
     try {
       e.preventDefault()
-      await addExpense(localStorageGroupRepository, groupData, expenseFormData)
+      await addExpenseCommand(localStorageGroupRepository).execute({ group: groupData, expense: expenseFormData })
       const updatedTableData = await getGroupQuery(localStorageGroupRepository).execute()
       setGroupData(updatedTableData!)
       setShowExpenseForm(false)
@@ -67,9 +67,6 @@ export const ExpensesMain = () => {
   const handleUserFormSubmit = async (username: string) => {
     try {
       const newUser = { name: username, balance: 0, id: _getNewUserId() }
-      //Así llamaba antes al caso de uso
-      // await addMember(localStorageGroupRepository, groupData, newUser)
-      //Así llamo ahora al caso de uso
       await addMemberCommand(localStorageGroupRepository).execute({ group: groupData, member: newUser })
       const updatedTableData = await getGroupQuery(localStorageGroupRepository).execute()
       setGroupData(updatedTableData!)

@@ -1,6 +1,6 @@
 import { Expense } from 'modules/expense/domain/Expense'
 import { User } from 'modules/user/domain/User'
-import { addExpense } from 'modules/expense/application/add/addExpense'
+import { addExpenseCommand } from 'modules/expense/application/add/add-expense.command'
 import { groupRepositoryMock } from 'test/mocks/groupRepository.mock'
 
 describe('Add Expense', () => {
@@ -16,7 +16,7 @@ describe('Add Expense', () => {
       date: '2022-01-28',
     }
 
-    await addExpense(repository, group, validMockedExpense)
+    await addExpenseCommand(repository).execute({ group: group, expense: validMockedExpense })
 
     expect(repository.saveGroup).toHaveBeenCalledWith(group)
   })
@@ -31,6 +31,8 @@ describe('Add Expense', () => {
       date: '2022-01-28',
     }
 
-    await expect(async () => await addExpense(repository, group, invalidMockedExpense)).rejects.toThrow()
+    await expect(
+      async () => await addExpenseCommand(repository).execute({ group: group, expense: invalidMockedExpense }),
+    ).rejects.toThrow()
   })
 })
