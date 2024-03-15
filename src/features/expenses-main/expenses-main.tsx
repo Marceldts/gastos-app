@@ -7,7 +7,7 @@ import { localStorageGroupRepository } from 'modules/group/infrastructure/reposi
 import { addExpense } from 'modules/expense/application/add/addExpense'
 import { addMemberCommand } from 'modules/group/application/add/add-member.command'
 import { User } from 'modules/user/domain/User'
-import { getGroupBalance } from 'modules/group/application/get/getGroupBalance'
+import { getGroupBalanceQuery } from 'modules/group/application/get/get-group-balance.query'
 import { Debt } from 'modules/debt/domain/Debt'
 import { DebtList } from 'modules/debt/ui/debts-list'
 import { GroupBalance } from 'modules/group/ui/components/group-balance/group-balance'
@@ -31,9 +31,11 @@ export const ExpensesMain = () => {
   const repository: GroupRepository = localStorageGroupRepository
 
   useEffect(() => {
-    getGroupBalance(repository, groupData).then(groupBalance => {
-      setBalance(groupBalance)
-    })
+    getGroupBalanceQuery(repository)
+      .execute(groupData)
+      .then(groupBalance => {
+        setBalance(groupBalance)
+      })
   }, [groupData])
 
   useEffect(() => {

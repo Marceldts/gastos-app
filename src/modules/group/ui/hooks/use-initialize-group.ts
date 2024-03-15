@@ -1,5 +1,5 @@
 import { getGroupQuery } from 'modules/group/application/get/get-group.query'
-import { getGroupBalance } from 'modules/group/application/get/getGroupBalance'
+import { getGroupBalanceQuery } from 'modules/group/application/get/get-group-balance.query'
 import { saveGroup } from 'modules/group/application/save/saveGroup'
 import { Group } from 'modules/group/domain/Group'
 import { GroupRepository } from 'modules/group/domain/Group.repository'
@@ -48,7 +48,7 @@ export const useInitializeGroup = function (
   useEffect(() => {
     const _getGroupWhenInit = async () => {
       const group = await getGroupQuery(repository).execute()
-      setBalance(await getGroupBalance(localStorageGroupRepository, group!))
+      setBalance(await getGroupBalanceQuery(localStorageGroupRepository).execute(group!))
       setGroupData(group?.expenseList?.size === 0 && group.members.size === 0 ? testGroup : group!)
       await saveGroup(repository, group?.expenseList?.size === 0 && group.members.size === 0 ? testGroup : group!)
       if (group?.members?.size === 0) {
