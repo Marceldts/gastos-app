@@ -22,9 +22,7 @@ export const ensureIsExpenseValid = ({ payerId, amount, description, date }: Exp
 
 export class ExpenseError extends AggregateError {
   constructor(errors: Error[]) {
-    console.log(errors)
     super(`The expense is invalid.`)
     this.message = `\n${errors.map(error => error.message).join('')}`
-    console.warn(this.message)
   }
 }

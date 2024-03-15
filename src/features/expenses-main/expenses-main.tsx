@@ -54,7 +54,6 @@ export const ExpensesMain = () => {
       setGroupData(updatedTableData!)
       setShowExpenseForm(false)
     } catch (error) {
-      if (error instanceof ExpenseError) console.log(error)
       if (error instanceof ExpenseError) alert(error.message)
     }
   }
