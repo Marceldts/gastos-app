@@ -1,6 +1,6 @@
 import { Debt } from 'modules/debt/domain/Debt'
 import { Expense } from 'modules/expense/domain/Expense'
-import { Group, addExpenseToGroup } from 'modules/group/domain/Group'
+import { Group, addExpenseToGroup, addMemberToGroup } from 'modules/group/domain/Group'
 import { GroupRepository } from 'modules/group/domain/Group.repository'
 import { User } from 'modules/user/domain/User'
 
@@ -30,19 +30,13 @@ export const localStorageGroupRepository: GroupRepository = {
     }
     localStorage.setItem('group', JSON.stringify(groupToSave))
   },
-  /*
-        TODO: Aplicar ley demeter
-    */
 
-  /*
-    TODO: Mover addExpense y addMember al dominio de grupo
-  */
   addExpense: async function (group: Group, expense: Expense): Promise<void> {
     addExpenseToGroup(group, expense)
-    this.saveGroup(group)
+    await this.saveGroup(group)
   },
   addMember: async function (group: Group, member: User): Promise<void> {
-    group.members.add(member)
+    addMemberToGroup(group, member)
     await this.saveGroup(group)
   },
   getGroupDebts: async function ({ members }: Group): Promise<Debt[]> {

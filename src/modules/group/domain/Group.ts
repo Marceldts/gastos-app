@@ -43,6 +43,10 @@ export const addExpenseToGroup = (group: Group, expense: Expense): void => {
   }
 }
 
+export const addMemberToGroup = (group: Group, member: User): void => {
+  group.members.add(member)
+}
+
 const _everyMemberHasUniqueIds = (members: Set<User>): boolean => {
   const userIdsSet = new Set<number>()
 
