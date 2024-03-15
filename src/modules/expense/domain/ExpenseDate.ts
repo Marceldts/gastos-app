@@ -12,3 +12,9 @@ const isISOString = (dateString: string): boolean => {
   const isoFormatRegex = /^\d{4}-\d{2}-\d{2}$/
   return isoFormatRegex.test(dateString)
 }
+
+export class ExpenseDateError extends Error {
+  constructor() {
+    super(`Date is not valid.\n`)
+  }
+}

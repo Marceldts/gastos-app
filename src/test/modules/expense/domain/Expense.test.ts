@@ -1,5 +1,5 @@
 import { Expense, ensureIsExpenseValid } from 'modules/expense/domain/Expense'
-import { ExpenseMother } from 'test/modules/expense/domain/ExpenseMother'
+import { ExpenseMother } from 'modules/expense/domain/ExpenseMother'
 
 describe('expense is valid', () => {
   test('valid expense', () => {

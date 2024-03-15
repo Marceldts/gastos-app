@@ -1,4 +1,4 @@
-import { ExpenseMother } from 'test/modules/expense/domain/ExpenseMother'
+import { ExpenseMother } from 'modules/expense/domain/ExpenseMother'
 import { Group } from 'modules/group/domain/Group'
 import { GroupRepository } from 'modules/group/domain/Group.repository'
 import { GroupMother } from 'test/modules/group/domain/GroupMother'

@@ -17,6 +17,7 @@ import { useExpenseTableData } from 'modules/expense/ui/hooks/useExpenseTableDat
 import { useShowUserForm } from 'shared/ui/hooks/use-show-user-form'
 import { useShowExpenseForm } from 'shared/ui/hooks/use-show-expense-form'
 import { useInitializeGroup } from 'modules/group/ui/hooks/use-initialize-group'
+import { ExpenseError } from 'modules/expense/domain/Expense'
 
 export const ExpensesMain = () => {
   const [groupData, setGroupData] = useState({} as Group)
@@ -53,7 +54,8 @@ export const ExpensesMain = () => {
       setGroupData(updatedTableData!)
       setShowExpenseForm(false)
     } catch (error) {
-      alert(error)
+      if (error instanceof ExpenseError) console.log(error)
+      if (error instanceof ExpenseError) alert(error.message)
     }
   }
 
