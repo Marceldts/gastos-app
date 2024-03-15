@@ -2,11 +2,10 @@ import '../../App.css'
 import { SyntheticEvent, useEffect, useState } from 'react'
 import { Group } from 'modules/group/domain/Group'
 import { getGroupQuery } from 'modules/group/application/get/get-group.query'
-import { GroupRepository } from 'modules/group/domain/Group.repository'
 import { localStorageGroupRepository } from 'modules/group/infrastructure/repositories/LocalStorageGroup.repository'
 import { addExpenseCommand } from 'modules/expense/application/add/add-expense.command'
 import { addMemberCommand } from 'modules/group/application/add/add-member.command'
-import { User } from 'modules/user/domain/User'
+import { User, getNewUserId } from 'modules/user/domain/User'
 import { getGroupBalanceQuery } from 'modules/group/application/get/get-group-balance.query'
 import { Debt } from 'modules/debt/domain/Debt'
 import { DebtList } from 'modules/debt/ui/debts-list'
@@ -27,8 +26,6 @@ export const ExpensesMain = () => {
   const { tableData } = useExpenseTableData(groupData, setShowExpenseForm, setShowUserForm)
   const [balance, setBalance] = useState<Map<User, number> | null>(null)
   const [debts, setDebts] = useState([] as Debt[])
-
-  const repository: GroupRepository = localStorageGroupRepository
 
   useEffect(() => {
     getGroupBalanceQuery()
@@ -66,7 +63,7 @@ export const ExpensesMain = () => {
 
   const handleUserFormSubmit = async (username: string) => {
     try {
-      const newUser = { name: username, balance: 0, id: _getNewUserId() }
+      const newUser = { name: username, balance: 0, id: getNewUserId(groupData.members) }
       await addMemberCommand(localStorageGroupRepository).execute({ group: groupData, member: newUser })
       const updatedTableData = await getGroupQuery(localStorageGroupRepository).execute()
       setGroupData(updatedTableData!)
@@ -78,16 +75,6 @@ export const ExpensesMain = () => {
 
   const handleUserFormCancel = () => {
     setShowUserForm(false)
-  }
-
-  const _getNewUserId = () => {
-    let id = Math.floor(Math.random() * 5000) + 1
-
-    while (Array.from(groupData.members).some(user => user.id === id)) {
-      id = Math.floor(Math.random() * 5000) + 1
-    }
-
-    return id
   }
 
   return (
