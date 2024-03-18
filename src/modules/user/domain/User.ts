@@ -1,4 +1,4 @@
-import { isUserNameValid } from './UserName'
+import { UserNameError, isUserNameValid } from './UserName'
 
 export interface User {
   readonly id: number
@@ -7,9 +7,16 @@ export interface User {
 }
 
 export const ensureIsUserValid = ({ name }: User): void => {
-  let errorMessage = ''
-  if (!isUserNameValid(name)) errorMessage += 'Name is not valid.\n'
-  if (errorMessage.length > 0) throw new Error('\n' + errorMessage)
+  const errors: Error[] = []
+  if (!isUserNameValid(name)) errors.push(new UserNameError())
+  if (errors.length > 0) throw new UserError(errors)
+}
+
+export class UserError extends AggregateError {
+  constructor(errors: Error[]) {
+    super(`The user is invalid.`)
+    this.message = `\n${errors.map(error => error.message).join('')}`
+  }
 }
 
 export const getNewUserId = (members: Set<User>) => {
