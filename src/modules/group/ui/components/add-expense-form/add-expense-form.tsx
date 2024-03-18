@@ -10,7 +10,7 @@ export interface ExpenseFormData {
 }
 interface AddExpenseFormProps {
   handleSubmitForm: (e: SyntheticEvent, expenseFormData: ExpenseFormData) => void
-  handleCancelForm: () => void
+  handleCancelForm: (e: SyntheticEvent) => void
 }
 
 export const AddExpenseForm = ({ handleSubmitForm, handleCancelForm }: AddExpenseFormProps) => {

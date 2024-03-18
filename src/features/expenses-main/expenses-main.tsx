@@ -56,7 +56,8 @@ export const ExpensesMain = () => {
     }
   }
 
-  const handleExpenseFormCancel = () => {
+  const handleExpenseFormCancel = (e: SyntheticEvent) => {
+    e.preventDefault()
     setShowExpenseForm(false)
   }
 
@@ -72,7 +73,8 @@ export const ExpensesMain = () => {
     }
   }
 
-  const handleUserFormCancel = () => {
+  const handleUserFormCancel = (e: SyntheticEvent) => {
+    e.preventDefault()
     setShowUserForm(false)
   }
 

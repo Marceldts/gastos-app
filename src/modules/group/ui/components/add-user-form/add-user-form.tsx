@@ -1,10 +1,10 @@
 import { Group } from 'modules/group/domain/Group'
-import { useState } from 'react'
+import { SyntheticEvent, useState } from 'react'
 
 interface AddUserFormProps {
   groupData: Group
   submitHandler: (username: string) => void
-  cancelHandler: () => void
+  cancelHandler: (e: SyntheticEvent) => void
   setShowUserForm: (value: boolean) => void
 }
 

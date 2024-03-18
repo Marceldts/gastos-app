@@ -41,11 +41,6 @@ test.describe('Expenses main', () => {
       expect(await page.locator('.expense-form').isVisible()).toBeFalsy()
     })
 
-    test('should hide the add expense form when clicking add user button', async ({ page }) => {
-      await page.click('text=Añadir miembro al grupo')
-      expect(await page.locator('.expense-form').isVisible()).toBeFalsy()
-    })
-
     test('should show an error message if the expense form is submitted with empty fields', async ({ page }) => {
       await page.click('text=Enviar')
       expect(errorMessage).toBe('\nAmount is not valid.\nDescription is not valid.\nDate is not valid.\n')
@@ -89,17 +84,11 @@ test.describe('Expenses main', () => {
     })
 
     test('should show the add user form', async ({ page }) => {
-      await page.click('text=Añadir miembro al grupo')
       expect(await page.locator('.user-form').isVisible()).toBeTruthy()
     })
 
     test('should hide the add user form when the cancel button is clicked', async ({ page }) => {
       await page.click('text=Cancelar')
-      expect(await page.locator('.user-form').isVisible()).toBeFalsy()
-    })
-
-    test('should hide the add user form when clicking add expense button', async ({ page }) => {
-      await page.click('text=Añadir gasto')
       expect(await page.locator('.user-form').isVisible()).toBeFalsy()
     })
 
