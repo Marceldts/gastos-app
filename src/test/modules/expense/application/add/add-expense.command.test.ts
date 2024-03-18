@@ -2,7 +2,7 @@ import { Expense } from 'modules/expense/domain/Expense'
 import { addExpenseCommand } from 'modules/expense/application/add/add-expense.command'
 import { groupRepositoryMock } from 'test/mocks/groupRepository.mock'
 import { GroupMother } from 'test/modules/group/domain/GroupMother'
-import { ExpenseMother } from 'test/modules/expense/domain/ExpenseMother'
+import { ExpenseMother } from 'modules/expense/domain/ExpenseMother'
 
 describe('Add Expense', () => {
   const repository = groupRepositoryMock
