@@ -7,11 +7,11 @@ export interface Group {
 }
 
 export const ensureIsGroupValid = ({ members, expenseList }: Group): void => {
-  let errorMessage = ''
-  if (!_everyMemberHasUniqueIds(members)) errorMessage += 'Members list has duplicate ids.\n'
-  if (_cannotHaveExpensesWithoutMembers({ members, expenseList }))
-    errorMessage += 'Cannot have expenses without members.\n'
-  if (errorMessage.length > 0) throw new Error('\n' + errorMessage)
+  const errors: Error[] = []
+  if (!_everyMemberHasUniqueIds(members)) errors.push(new GroupRepeatedIdError())
+  if (_cannotHaveExpensesWithoutMembers({ members, expenseList })) errors.push(new GroupExpenseWithoutMembersError())
+
+  if (errors.length > 0) throw new GroupError(errors)
 }
 
 export const getGroupBalance = ({ members }: Group): Map<User, number> | null => {
@@ -45,6 +45,25 @@ export const addExpenseToGroup = (group: Group, expense: Expense): void => {
 
 export const addMemberToGroup = (group: Group, member: User): void => {
   group.members.add(member)
+}
+
+export class GroupError extends AggregateError {
+  constructor(errors: Error[]) {
+    super(`The group is invalid.`)
+    this.message = `\n${errors.map(error => error.message).join('')}`
+  }
+}
+
+export class GroupRepeatedIdError extends Error {
+  constructor() {
+    super(`Members list has duplicate ids.\n`)
+  }
+}
+
+export class GroupExpenseWithoutMembersError extends Error {
+  constructor() {
+    super(`Cannot have expenses without members.\n`)
+  }
 }
 
 const _everyMemberHasUniqueIds = (members: Set<User>): boolean => {
