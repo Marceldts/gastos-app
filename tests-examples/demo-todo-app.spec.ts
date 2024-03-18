@@ -1,3 +1,4 @@
+/* eslint-disable testing-library/prefer-screen-queries */
 import { test, expect, type Page } from '@playwright/test'
 
 test.beforeEach(async ({ page }) => {
