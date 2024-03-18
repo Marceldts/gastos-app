@@ -1,5 +1,5 @@
 import '../../App.css'
-import { SyntheticEvent, useEffect, useState } from 'react'
+import { SyntheticEvent, useContext, useEffect, useState } from 'react'
 import { Group } from 'modules/group/domain/Group'
 import { getGroupQuery } from 'modules/group/application/get/get-group.query'
 import { localStorageGroupRepository } from 'modules/group/infrastructure/repositories/LocalStorageGroup.repository'
@@ -14,16 +14,14 @@ import { AddUserForm } from 'modules/group/ui/components/add-user-form/add-user-
 import { AddExpenseForm, ExpenseFormData } from 'modules/group/ui/components/add-expense-form/add-expense-form'
 import { ExpenseTable } from 'modules/expense/ui/components/expense-table/expense-table'
 import { useExpenseTableData } from 'modules/expense/ui/hooks/useExpenseTableData'
-import { useShowUserForm } from 'shared/ui/hooks/use-show-user-form'
-import { useShowExpenseForm } from 'shared/ui/hooks/use-show-expense-form'
 import { useInitializeGroup } from 'modules/group/ui/hooks/use-initialize-group'
 import { ExpenseError } from 'modules/expense/domain/Expense'
+import { ExpensesMainContext } from './expenses-main.context'
 
 export const ExpensesMain = () => {
   const [groupData, setGroupData] = useState({} as Group)
 
-  const { showUserForm, setShowUserForm } = useShowUserForm()
-  const { showExpenseForm, setShowExpenseForm } = useShowExpenseForm()
+  const { showUserForm, setShowUserForm, showExpenseForm, setShowExpenseForm } = useContext(ExpensesMainContext)
   const { tableData } = useExpenseTableData(groupData, setShowExpenseForm, setShowUserForm)
   const [balance, setBalance] = useState<Map<User, number> | null>(null)
   const [debts, setDebts] = useState([] as Debt[])
