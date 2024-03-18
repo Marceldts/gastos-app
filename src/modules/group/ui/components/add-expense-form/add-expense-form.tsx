@@ -1,4 +1,5 @@
 import { SyntheticEvent, useState } from 'react'
+import { today } from 'shared/datetime/datetime'
 
 export interface ExpenseFormData {
   payerName: string
@@ -20,8 +21,6 @@ export const AddExpenseForm = ({ handleSubmitForm, handleCancelForm }: AddExpens
     amount: 0,
     date: '',
   })
-
-  const today = new Date().toISOString().split('T')[0]
 
   return (
     <form className="expense-form">

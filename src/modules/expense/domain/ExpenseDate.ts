@@ -1,11 +1,11 @@
+import { today } from 'shared/datetime/datetime'
+
 export const isDateValid = (date: string): boolean => {
   return dateIsNotAfterToday(date) && isISOString(date)
 }
 
 const dateIsNotAfterToday = (date: string): boolean => {
-  const today = new Date()
-  const todayIsoString = today.toISOString().split('T')[0]
-  return todayIsoString >= date && date.length > 0
+  return today >= date && date.length > 0
 }
 
 const isISOString = (dateString: string): boolean => {
