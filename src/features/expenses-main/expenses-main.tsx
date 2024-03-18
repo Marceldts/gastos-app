@@ -5,7 +5,7 @@ import { getGroupQuery } from 'modules/group/application/get/get-group.query'
 import { localStorageGroupRepository } from 'modules/group/infrastructure/repositories/LocalStorageGroup.repository'
 import { addExpenseCommand } from 'modules/expense/application/add/add-expense.command'
 import { addMemberCommand } from 'modules/group/application/add/add-member.command'
-import { User, getNewUserId } from 'modules/user/domain/User'
+import { User, UserError, getNewUserId } from 'modules/user/domain/User'
 import { getGroupBalanceQuery } from 'modules/group/application/get/get-group-balance.query'
 import { Debt } from 'modules/debt/domain/Debt'
 import { DebtList } from 'modules/debt/ui/debts-list'
@@ -68,7 +68,7 @@ export const ExpensesMain = () => {
       setGroupData(updatedTableData!)
       setShowUserForm(false)
     } catch (error) {
-      alert(error)
+      if (error instanceof UserError) alert(error.message)
     }
   }
 
