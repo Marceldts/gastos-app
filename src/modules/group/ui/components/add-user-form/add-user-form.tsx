@@ -12,7 +12,7 @@ export const AddUserForm = ({ submitHandler, cancelHandler }: AddUserFormProps) 
   const [newUserName, setNewUserName] = useState('')
 
   return (
-    <form className="user-form">
+    <form role="dialog" id="user-form" className="user-form">
       <h3>Añadir miembro al grupo</h3>
       <label>Nombre de usuario:</label>
       <input type="text" value={newUserName} onChange={e => setNewUserName(e.target.value)} />

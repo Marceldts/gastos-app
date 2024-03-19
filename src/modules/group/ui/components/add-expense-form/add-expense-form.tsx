@@ -23,7 +23,7 @@ export const AddExpenseForm = ({ handleSubmitForm, handleCancelForm }: AddExpens
   })
 
   return (
-    <form className="expense-form">
+    <form role="dialog" id="expense-form" className="expense-form">
       <h3>Añadir gasto</h3>
       <label>Descripción:</label>
       <input
