@@ -39,20 +39,16 @@ export const Home = () => {
 
   useEffect(() => {
     if (showExpenseForm) {
-      // setParams('addExpense=true')
       setShowUserForm(false)
-    } else {
-      // _clearParams()
     }
+    _setFormsParams()
   }, [showExpenseForm])
 
   useEffect(() => {
     if (showUserForm) {
-      // setParams('addUser=true')
       setShowExpenseForm(false)
-    } else {
-      // _clearParams()
     }
+    _setFormsParams()
   }, [showUserForm])
 
   useInitializeGroup(setGroupData, setBalance, setShowExpenseForm)
@@ -91,7 +87,15 @@ export const Home = () => {
     setShowUserForm(false)
   }
 
-  const _clearParams = () => {
+  const _setFormsParams = () => {
+    if (showExpenseForm) {
+      setParams('addExpense=true')
+      return
+    }
+    if (showUserForm) {
+      setParams('addUser=true')
+      return
+    }
     setParams('')
   }
 
