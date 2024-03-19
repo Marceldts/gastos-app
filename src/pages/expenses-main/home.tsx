@@ -16,15 +16,18 @@ import { ExpenseTable } from 'modules/expense/ui/components/expense-table/expens
 import { useExpenseTableData } from 'modules/expense/ui/hooks/useExpenseTableData'
 import { useInitializeGroup } from 'modules/group/ui/hooks/use-initialize-group'
 import { ExpenseError } from 'modules/expense/domain/Expense'
-import { ExpensesMainContext } from './expenses-main.context'
+import { ExpensesMainContext } from './home.context'
+import { useSearchParams } from 'react-router-dom'
 
-export const ExpensesMain = () => {
+export const Home = () => {
   const [groupData, setGroupData] = useState({} as Group)
 
   const { showUserForm, setShowUserForm, showExpenseForm, setShowExpenseForm } = useContext(ExpensesMainContext)
   const { tableData } = useExpenseTableData(groupData, setShowExpenseForm, setShowUserForm)
   const [balance, setBalance] = useState<Map<User, number> | null>(null)
   const [debts, setDebts] = useState([] as Debt[])
+
+  const [params, setParams] = useSearchParams()
 
   useEffect(() => {
     getGroupBalanceQuery()
@@ -35,11 +38,21 @@ export const ExpensesMain = () => {
   }, [groupData])
 
   useEffect(() => {
-    if (showExpenseForm) setShowUserForm(false)
+    if (showExpenseForm) {
+      // setParams('addExpense=true')
+      setShowUserForm(false)
+    } else {
+      // _clearParams()
+    }
   }, [showExpenseForm])
 
   useEffect(() => {
-    if (showUserForm) setShowExpenseForm(false)
+    if (showUserForm) {
+      // setParams('addUser=true')
+      setShowExpenseForm(false)
+    } else {
+      // _clearParams()
+    }
   }, [showUserForm])
 
   useInitializeGroup(setGroupData, setBalance, setShowExpenseForm)
@@ -76,6 +89,10 @@ export const ExpensesMain = () => {
   const handleUserFormCancel = (e: SyntheticEvent) => {
     e.preventDefault()
     setShowUserForm(false)
+  }
+
+  const _clearParams = () => {
+    setParams('')
   }
 
   return (

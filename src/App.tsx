@@ -1,7 +1,7 @@
 import './App.css'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
-import { ExpensesMain } from 'features/expenses-main/expenses-main'
-import { ExpensesMainContextProvider } from 'features/expenses-main/expenses-main.context'
+import { Home } from 'pages/expenses-main/home'
+import { ExpensesMainContextProvider } from 'pages/expenses-main/home.context'
 
 function App() {
   return (
@@ -11,7 +11,7 @@ function App() {
           path="home"
           element={
             <ExpensesMainContextProvider>
-              <ExpensesMain />
+              <Home />
             </ExpensesMainContextProvider>
           }
         ></Route>

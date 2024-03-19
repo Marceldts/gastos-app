@@ -1,5 +1,6 @@
-/* eslint-disable testing-library/prefer-screen-queries */
 import { test, expect, type Page } from '@playwright/test'
+
+//TODO: Sacar la lógica (implementar pageObject)
 
 const isUsernameRepeated = async (page: Page, username: string): Promise<boolean> => {
   const isUsernameVisible = await page.locator(`text=${username}`).isVisible()

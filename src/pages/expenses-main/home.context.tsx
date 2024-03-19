@@ -1,4 +1,5 @@
 import { createContext, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
 interface ExpensesMainContextType {
   showExpenseForm: boolean
@@ -8,8 +9,11 @@ interface ExpensesMainContextType {
 }
 
 export const ExpensesMainContextProvider = ({ children }: { children: React.ReactNode }) => {
-  const [showExpenseForm, setShowExpenseForm] = useState(false)
-  const [showUserForm, setShowUserForm] = useState(false)
+  const [urlParams] = useSearchParams()
+  const showExpenseParam = urlParams.get('addExpense') === 'true'
+  const showUserParam = urlParams.get('addUser') === 'true'
+  const [showExpenseForm, setShowExpenseForm] = useState(showExpenseParam ?? false)
+  const [showUserForm, setShowUserForm] = useState((!showExpenseParam && showUserParam) ?? false)
 
   return (
     <ExpensesMainContext.Provider value={{ showExpenseForm, setShowExpenseForm, showUserForm, setShowUserForm }}>
