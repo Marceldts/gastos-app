@@ -2,7 +2,6 @@
 
 Esta aplicación sirve para poder ver y gestionar los gastos de un grupo de personas, y así poder ver y gestionarlos más fácilmente
 
-
 ## Scripts
 
 ### `npm start`

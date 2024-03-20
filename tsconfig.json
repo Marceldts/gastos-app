@@ -20,5 +20,5 @@
       "domain/*": ["domain/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "e2e"]
 }
