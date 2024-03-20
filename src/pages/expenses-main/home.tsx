@@ -108,7 +108,11 @@ export const Home = () => {
       {(showExpenseForm || showUserForm) && (
         <section className="forms">
           {showExpenseForm && (
-            <AddExpenseForm handleSubmitForm={handleExpenseFormSubmit} handleCancelForm={handleExpenseFormCancel} />
+            <AddExpenseForm
+              members={groupData.members}
+              handleSubmitForm={handleExpenseFormSubmit}
+              handleCancelForm={handleExpenseFormCancel}
+            />
           )}
           {showUserForm && (
             <AddUserForm

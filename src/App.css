@@ -144,6 +144,16 @@
   background-color: #d9534f;
 }
 
+.expense-form-buttons .close-button {
+  width: 100%;
+  background-color: var(--color-button-cancel);
+}
+
+.expense-form-buttons .close-button:hover {
+  width: 100%;
+  background-color: var(--color-button-cancel);
+}
+
 .forms {
   display: flex;
   flex-direction: row;
@@ -189,4 +199,11 @@ table {
 
 .balance {
   margin: auto;
+}
+
+select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  box-sizing: border-box;
 }
