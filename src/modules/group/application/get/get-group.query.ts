@@ -7,6 +7,6 @@ import { Query } from 'shared/application/usecase/query'
  * @param groupRepository The implementation of the group repository that will be used to get the group
  * @returns A promise that resolves to the group
  **/
-export const getGroupQuery = (groupRepository: GroupRepository): Query<void, Group> => ({
-  execute: async () => groupRepository.getGroup(),
+export const getGroupQuery = (groupRepository: GroupRepository): Query<string, Group> => ({
+  execute: async (id: string) => groupRepository.getGroup(id),
 })

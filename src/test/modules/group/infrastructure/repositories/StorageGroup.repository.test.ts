@@ -23,18 +23,19 @@ describe('local storage group repository implementation', () => {
     test('getGroup should return an empty group if there is no group in local storage', async () => {
       getItemMock.mockReturnValueOnce(JSON.stringify(undefined))
       const emptyGroup = GroupMother.empty()
-      const group = await repository.getGroup()
+      const group = await repository.getGroup('')
       expect(group).toEqual(emptyGroup)
     })
 
     test('getGroup should return the group from local storage if there is one', async () => {
       const mockedSerializedGroup = {
+        id: '',
         members: [],
         expenseList: [],
       }
       const mockedGroup = GroupMother.empty()
       getItemMock.mockReturnValueOnce(JSON.stringify(mockedSerializedGroup))
-      const group = await repository.getGroup()
+      const group = await repository.getGroup('')
       expect(group).toEqual(mockedGroup)
     })
 
@@ -43,7 +44,7 @@ describe('local storage group repository implementation', () => {
         throw mockedError
       })
 
-      await expect(repository.getGroup()).rejects.toThrow(mockedError)
+      await expect(repository.getGroup('')).rejects.toThrow(mockedError)
     })
   })
 
@@ -60,8 +61,9 @@ describe('local storage group repository implementation', () => {
       await repository.saveGroup(groupToSave)
 
       expect(setItemMock).toHaveBeenCalledWith(
-        'group',
+        `group ${groupToSave.id}`,
         JSON.stringify({
+          id: groupToSave.id,
           expenseList: Array.from(groupToSave.expenseList),
           members: Array.from(groupToSave.members),
         }),

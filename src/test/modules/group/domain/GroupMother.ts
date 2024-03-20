@@ -7,24 +7,28 @@ import { UserMother } from 'test/modules/user/domain/UserMother'
 export class GroupMother {
   static empty(): Group {
     return {
+      id: '',
       members: new Set(),
       expenseList: new Set(),
     }
   }
   static withMembers(members: Set<User>): Group {
     return {
+      id: '',
       members,
       expenseList: new Set(),
     }
   }
   static withExpenses(expenseList: Set<Expense>): Group {
     return {
+      id: '',
       members: new Set(),
       expenseList,
     }
   }
   static withMembersAndExpenses(members: Set<User>, expenseList: Set<Expense>): Group {
     return {
+      id: '',
       members,
       expenseList,
     }
@@ -32,6 +36,7 @@ export class GroupMother {
 
   static valid(): Group {
     return {
+      id: '1',
       members: new Set([UserMother.validWithId(1), UserMother.validWithId(2)]),
       expenseList: new Set([ExpenseMother.validWithPayerId(1), ExpenseMother.validWithPayerId(2)]),
     }
@@ -39,6 +44,7 @@ export class GroupMother {
 
   static invalidWithDuplicatedMemberIds(): Group {
     return {
+      id: '1',
       members: new Set([UserMother.validWithId(1), UserMother.validWithId(1)]),
       expenseList: new Set(),
     }
@@ -46,6 +52,7 @@ export class GroupMother {
 
   static invalidWithExpensesWithoutMembers(): Group {
     return {
+      id: '1',
       members: new Set(),
       expenseList: new Set([ExpenseMother.validWithPayerId(1)]),
     }

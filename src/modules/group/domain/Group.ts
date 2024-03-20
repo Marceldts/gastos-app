@@ -2,14 +2,16 @@ import { Expense } from 'modules/expense/domain/Expense'
 import { User } from 'modules/user/domain/User'
 
 export interface Group {
+  readonly id: string
   expenseList: Set<Expense>
   members: Set<User>
 }
 
-export const ensureIsGroupValid = ({ members, expenseList }: Group): void => {
+export const ensureIsGroupValid = ({ id, members, expenseList }: Group): void => {
   const errors: Error[] = []
   if (!_everyMemberHasUniqueIds(members)) errors.push(new GroupRepeatedIdError())
-  if (_cannotHaveExpensesWithoutMembers({ members, expenseList })) errors.push(new GroupExpenseWithoutMembersError())
+  if (_cannotHaveExpensesWithoutMembers({ id, members, expenseList }))
+    errors.push(new GroupExpenseWithoutMembersError())
 
   if (errors.length > 0) throw new GroupError(errors)
 }
@@ -29,7 +31,6 @@ export const addExpenseToGroup = (group: Group, expense: Expense): void => {
   let payerFound = false
   const totalReceivers = group.members.size
   const amountPerReceiver = expense.amount / totalReceivers
-
   group.members.forEach(user => {
     if (user.id === expense.payerId) {
       payerFound = true

@@ -5,15 +5,18 @@ import { Group } from 'modules/group/domain/Group'
 import { GroupRepository } from 'modules/group/domain/Group.repository'
 import { createStorageGroupRepository } from 'modules/group/infrastructure/repositories/StorageGroup.repository'
 import { User } from 'modules/user/domain/User'
-import { useEffect } from 'react'
+import { useContext, useEffect } from 'react'
+import { ExpensesMainContext } from 'pages/expenses-main/home.context'
 
 export const useInitializeGroup = function (
   setGroupData: (data: Group) => void,
   setBalance: (balance: Map<User, number> | null) => void,
   setShowExpenseForm: (show: boolean) => void,
 ) {
+  const { id } = useContext(ExpensesMainContext)
   const repository: GroupRepository = createStorageGroupRepository(localStorage)
   const testGroup: Group = {
+    id: '1',
     members: new Set([
       { name: 'Marcel', balance: 59.15, id: 1 },
       { name: 'Juan', balance: 22.55, id: 2 },
@@ -47,14 +50,14 @@ export const useInitializeGroup = function (
 
   useEffect(() => {
     const _getGroupWhenInit = async () => {
-      const group = await getGroupQuery(repository).execute()
+      const group = await getGroupQuery(repository).execute(id)
       setBalance(await getGroupBalanceQuery().execute(group))
       setGroupData(group.expenseList.size === 0 && group.members.size === 0 ? testGroup : group)
       await saveGroupCommand(repository).execute(
         group.expenseList.size === 0 && group.members.size === 0 ? testGroup : group,
       )
       if (group.members.size === 0) {
-        const updatedTableData = await getGroupQuery(repository).execute()
+        const updatedTableData = await getGroupQuery(repository).execute(id)
         setGroupData(updatedTableData!)
         setShowExpenseForm(false)
       }

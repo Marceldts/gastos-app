@@ -37,10 +37,7 @@ describe('getGroupBalance', () => {
   test('if the group is not empty, getGroupBalance should return a map with the members and their balance', async () => {
     const member1 = UserMother.validWithIdAndBalance(1, 10)
     const member2 = UserMother.validWithIdAndBalance(2, -10)
-    const group: Group = {
-      expenseList: new Set(),
-      members: new Set([member1, member2]),
-    }
+    const group: Group = GroupMother.withMembers(new Set([member1, member2]))
 
     const balance = getGroupBalance(group)
 

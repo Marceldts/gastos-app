@@ -21,11 +21,11 @@ import { useSearchParams } from 'react-router-dom'
 
 export const Home = () => {
   const [groupData, setGroupData] = useState({} as Group)
+  const [debts, setDebts] = useState([] as Debt[])
 
-  const { showUserForm, setShowUserForm, showExpenseForm, setShowExpenseForm } = useContext(ExpensesMainContext)
+  const { id, showUserForm, setShowUserForm, showExpenseForm, setShowExpenseForm } = useContext(ExpensesMainContext)
   const { tableData } = useExpenseTableData(groupData, setShowExpenseForm, setShowUserForm)
   const [balance, setBalance] = useState<Map<User, number> | null>(null)
-  const [debts, setDebts] = useState([] as Debt[])
 
   const [params, setParams] = useSearchParams()
 
@@ -59,7 +59,7 @@ export const Home = () => {
     try {
       e.preventDefault()
       await addExpenseCommand(repository).execute({ group: groupData, expense: expenseFormData })
-      const updatedTableData = await getGroupQuery(repository).execute()
+      const updatedTableData = await getGroupQuery(repository).execute(id)
       setGroupData(updatedTableData!)
       setShowExpenseForm(false)
     } catch (error) {
@@ -72,11 +72,12 @@ export const Home = () => {
     setShowExpenseForm(false)
   }
 
-  const handleUserFormSubmit = async (username: string) => {
+  const handleUserFormSubmit = async (e: SyntheticEvent, username: string) => {
     try {
+      e.preventDefault()
       const newUser = { name: username, balance: 0, id: getNewUserId(groupData.members) }
       await addMemberCommand(repository).execute({ group: groupData, member: newUser })
-      const updatedTableData = await getGroupQuery(repository).execute()
+      const updatedTableData = await getGroupQuery(repository).execute(id)
       setGroupData(updatedTableData!)
       setShowUserForm(false)
     } catch (error) {
