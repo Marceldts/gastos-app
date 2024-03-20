@@ -3,6 +3,7 @@ import { Expense } from 'modules/expense/domain/Expense'
 import { Group, addExpenseToGroup, addMemberToGroup } from 'modules/group/domain/Group'
 import { GroupRepository } from 'modules/group/domain/Group.repository'
 import { User } from 'modules/user/domain/User'
+import { decrypt, encrypt } from 'shared/encryption/encryption'
 
 export const createStorageGroupRepository = (storage: Storage): GroupRepository => {
   return {
@@ -10,7 +11,7 @@ export const createStorageGroupRepository = (storage: Storage): GroupRepository 
     getGroup: async function (): Promise<Group> {
       const stringifiedGroup = storage.getItem('group')
       if (stringifiedGroup) {
-        const parsedGroup = JSON.parse(stringifiedGroup)
+        const parsedGroup = JSON.parse(decrypt(stringifiedGroup))
         parsedGroup.members = new Set(parsedGroup.members)
         parsedGroup.expenseList = new Set(parsedGroup.expenseList)
         return parsedGroup
@@ -29,7 +30,7 @@ export const createStorageGroupRepository = (storage: Storage): GroupRepository 
         expenseList: Array.from(group.expenseList ?? []),
         members: Array.from(group.members ?? []),
       }
-      storage.setItem('group', JSON.stringify(groupToSave))
+      storage.setItem('group', encrypt(JSON.stringify(groupToSave)))
     },
 
     addExpense: async function (group: Group, expense: Expense): Promise<void> {
