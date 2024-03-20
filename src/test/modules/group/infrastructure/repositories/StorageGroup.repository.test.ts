@@ -2,7 +2,7 @@ import { ExpenseMother } from 'test/modules/expense/domain/ExpenseMother'
 import { Group } from 'modules/group/domain/Group'
 import { GroupRepository } from 'modules/group/domain/Group.repository'
 import { GroupMother } from 'test/modules/group/domain/GroupMother'
-import { localStorageGroupRepository } from 'modules/group/infrastructure/repositories/LocalStorageGroup.repository'
+import { createStorageGroupRepository } from 'modules/group/infrastructure/repositories/StorageGroup.repository'
 import { UserMother } from 'test/modules/user/domain/UserMother'
 
 describe('local storage group repository implementation', () => {
@@ -10,7 +10,7 @@ describe('local storage group repository implementation', () => {
   const mockedError = new Error('No se encontró al pagador en el conjunto de usuarios.')
 
   beforeAll(() => {
-    repository = localStorageGroupRepository
+    repository = createStorageGroupRepository(localStorage)
   })
 
   describe('getGroup', () => {
@@ -22,7 +22,6 @@ describe('local storage group repository implementation', () => {
 
     test('getGroup should return an empty group if there is no group in local storage', async () => {
       getItemMock.mockReturnValueOnce(JSON.stringify(undefined))
-      repository = localStorageGroupRepository
       const emptyGroup = GroupMother.empty()
       const group = await repository.getGroup()
       expect(group).toEqual(emptyGroup)
@@ -35,7 +34,6 @@ describe('local storage group repository implementation', () => {
       }
       const mockedGroup = GroupMother.empty()
       getItemMock.mockReturnValueOnce(JSON.stringify(mockedSerializedGroup))
-      repository = localStorageGroupRepository
       const group = await repository.getGroup()
       expect(group).toEqual(mockedGroup)
     })
@@ -44,8 +42,6 @@ describe('local storage group repository implementation', () => {
       getItemMock.mockImplementationOnce(() => {
         throw mockedError
       })
-
-      repository = localStorageGroupRepository
 
       await expect(repository.getGroup()).rejects.toThrow(mockedError)
     })
@@ -60,8 +56,6 @@ describe('local storage group repository implementation', () => {
 
     test('saveGroup should save the group in local storage', async () => {
       const groupToSave: Group = GroupMother.valid()
-
-      const repository = localStorageGroupRepository
 
       await repository.saveGroup(groupToSave)
 
@@ -79,8 +73,6 @@ describe('local storage group repository implementation', () => {
         throw mockedError
       })
 
-      repository = localStorageGroupRepository
-
       await expect(repository.saveGroup(GroupMother.empty())).rejects.toThrow(mockedError)
     })
   })
@@ -89,7 +81,7 @@ describe('local storage group repository implementation', () => {
     let saveGroupMock: jest.SpyInstance
 
     beforeAll(() => {
-      saveGroupMock = jest.spyOn(localStorageGroupRepository, 'saveGroup')
+      saveGroupMock = jest.spyOn(repository, 'saveGroup')
     })
 
     test('addExpense should add the expense to the group and save it', async () => {
@@ -99,7 +91,7 @@ describe('local storage group repository implementation', () => {
 
       saveGroupMock.mockResolvedValueOnce(() => {})
 
-      await localStorageGroupRepository.addExpense(group, expense)
+      await repository.addExpense(group, expense)
 
       expect(group.expenseList.has(expense)).toBeTruthy()
       expect(saveGroupMock).toHaveBeenCalledWith(group)
@@ -113,7 +105,7 @@ describe('local storage group repository implementation', () => {
       const group: Group = GroupMother.empty()
       const expense = ExpenseMother.validWithPayerIdAndAmount(1, 100)
 
-      await expect(localStorageGroupRepository.addExpense(group, expense)).rejects.toThrow(mockedError)
+      await expect(repository.addExpense(group, expense)).rejects.toThrow(mockedError)
     })
   })
 
@@ -121,7 +113,7 @@ describe('local storage group repository implementation', () => {
     let saveGroupMock: jest.SpyInstance
 
     beforeAll(() => {
-      saveGroupMock = jest.spyOn(localStorageGroupRepository, 'saveGroup')
+      saveGroupMock = jest.spyOn(repository, 'saveGroup')
     })
 
     test('addMember should add the member to the group and save it', async () => {
@@ -130,7 +122,7 @@ describe('local storage group repository implementation', () => {
 
       saveGroupMock.mockResolvedValueOnce(() => {})
 
-      await localStorageGroupRepository.addMember(group, member)
+      await repository.addMember(group, member)
 
       expect(group.members.has(member)).toBeTruthy()
       expect(saveGroupMock).toHaveBeenCalledWith(group)
@@ -144,7 +136,7 @@ describe('local storage group repository implementation', () => {
       const group: Group = GroupMother.empty()
       const member = UserMother.validWithId(100)
 
-      await expect(localStorageGroupRepository.addMember(group, member)).rejects.toThrow(mockedError)
+      await expect(repository.addMember(group, member)).rejects.toThrow(mockedError)
     })
   })
 })

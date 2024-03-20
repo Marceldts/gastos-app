@@ -3,7 +3,7 @@ import { getGroupBalanceQuery } from 'modules/group/application/get/get-group-ba
 import { saveGroupCommand } from 'modules/group/application/save/save-group.command'
 import { Group } from 'modules/group/domain/Group'
 import { GroupRepository } from 'modules/group/domain/Group.repository'
-import { localStorageGroupRepository } from 'modules/group/infrastructure/repositories/LocalStorageGroup.repository'
+import { createStorageGroupRepository } from 'modules/group/infrastructure/repositories/StorageGroup.repository'
 import { User } from 'modules/user/domain/User'
 import { useEffect } from 'react'
 
@@ -12,7 +12,7 @@ export const useInitializeGroup = function (
   setBalance: (balance: Map<User, number> | null) => void,
   setShowExpenseForm: (show: boolean) => void,
 ) {
-  const repository: GroupRepository = localStorageGroupRepository
+  const repository: GroupRepository = createStorageGroupRepository(localStorage)
   const testGroup: Group = {
     members: new Set([
       { name: 'Marcel', balance: 59.15, id: 1 },
@@ -54,11 +54,11 @@ export const useInitializeGroup = function (
         group.expenseList.size === 0 && group.members.size === 0 ? testGroup : group,
       )
       if (group.members.size === 0) {
-        const updatedTableData = await getGroupQuery(localStorageGroupRepository).execute()
+        const updatedTableData = await getGroupQuery(repository).execute()
         setGroupData(updatedTableData!)
         setShowExpenseForm(false)
       }
     }
     _getGroupWhenInit()
-  }, [repository])
+  }, [])
 }

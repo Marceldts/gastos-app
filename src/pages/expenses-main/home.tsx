@@ -2,7 +2,7 @@ import '../../App.css'
 import { SyntheticEvent, useContext, useEffect, useState } from 'react'
 import { Group } from 'modules/group/domain/Group'
 import { getGroupQuery } from 'modules/group/application/get/get-group.query'
-import { localStorageGroupRepository } from 'modules/group/infrastructure/repositories/LocalStorageGroup.repository'
+import { createStorageGroupRepository } from 'modules/group/infrastructure/repositories/StorageGroup.repository'
 import { addExpenseCommand } from 'modules/expense/application/add/add-expense.command'
 import { addMemberCommand } from 'modules/group/application/add/add-member.command'
 import { User, UserError, getNewUserId } from 'modules/user/domain/User'
@@ -28,6 +28,8 @@ export const Home = () => {
   const [debts, setDebts] = useState([] as Debt[])
 
   const [params, setParams] = useSearchParams()
+
+  const repository = createStorageGroupRepository(localStorage)
 
   useEffect(() => {
     getGroupBalanceQuery()
@@ -56,8 +58,8 @@ export const Home = () => {
   const handleExpenseFormSubmit = async (e: SyntheticEvent, expenseFormData: ExpenseFormData) => {
     try {
       e.preventDefault()
-      await addExpenseCommand(localStorageGroupRepository).execute({ group: groupData, expense: expenseFormData })
-      const updatedTableData = await getGroupQuery(localStorageGroupRepository).execute()
+      await addExpenseCommand(repository).execute({ group: groupData, expense: expenseFormData })
+      const updatedTableData = await getGroupQuery(repository).execute()
       setGroupData(updatedTableData!)
       setShowExpenseForm(false)
     } catch (error) {
@@ -73,8 +75,8 @@ export const Home = () => {
   const handleUserFormSubmit = async (username: string) => {
     try {
       const newUser = { name: username, balance: 0, id: getNewUserId(groupData.members) }
-      await addMemberCommand(localStorageGroupRepository).execute({ group: groupData, member: newUser })
-      const updatedTableData = await getGroupQuery(localStorageGroupRepository).execute()
+      await addMemberCommand(repository).execute({ group: groupData, member: newUser })
+      const updatedTableData = await getGroupQuery(repository).execute()
       setGroupData(updatedTableData!)
       setShowUserForm(false)
     } catch (error) {
