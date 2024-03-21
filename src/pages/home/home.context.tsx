@@ -27,9 +27,9 @@ export const ExpensesMainContextProvider = ({ children }: { children: React.Reac
 const defaultExpensesMainContext = {
   id: '1',
   showExpenseForm: false,
-  setShowExpenseForm: (value: boolean) => {},
+  setShowExpenseForm: (_: boolean) => {},
   showUserForm: false,
-  setShowUserForm: (value: boolean) => {},
+  setShowUserForm: (_: boolean) => {},
 }
 
 export const ExpensesMainContext = createContext<ExpensesMainContextType>(defaultExpensesMainContext)

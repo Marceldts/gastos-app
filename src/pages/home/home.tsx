@@ -18,6 +18,7 @@ import { useInitializeGroup } from 'modules/group/ui/hooks/use-initialize-group'
 import { ExpenseError } from 'modules/expense/domain/Expense'
 import { ExpensesMainContext } from './home.context'
 import { useSearchParams } from 'react-router-dom'
+import { EmptyGroup } from 'modules/group/ui/components/empty-group/empty-group'
 
 export const Home = () => {
   const [groupData, setGroupData] = useState({} as Group)
@@ -30,6 +31,7 @@ export const Home = () => {
   const [params, setParams] = useSearchParams()
 
   const repository = createStorageGroupRepository(localStorage)
+  const thereAreMembers = groupData.members && typeof groupData.members !== 'undefined' && groupData.members.size > 0
 
   useEffect(() => {
     getGroupBalanceQuery()
@@ -44,7 +46,7 @@ export const Home = () => {
       setShowUserForm(false)
     }
     _setFormsParams()
-  }, [showExpenseForm])
+  }, [showExpenseForm, thereAreMembers])
 
   useEffect(() => {
     if (showUserForm) {
@@ -107,13 +109,14 @@ export const Home = () => {
       <ExpenseTable tableData={tableData} setShowUserForm={setShowUserForm} setShowExpenseForm={setShowExpenseForm} />
       {(showExpenseForm || showUserForm) && (
         <section className="forms">
-          {showExpenseForm && (
+          {showExpenseForm && thereAreMembers && (
             <AddExpenseForm
               members={groupData.members}
               handleSubmitForm={handleExpenseFormSubmit}
               handleCancelForm={handleExpenseFormCancel}
             />
           )}
+          {showExpenseForm && !thereAreMembers && <EmptyGroup handleCancelForm={handleExpenseFormCancel} />}
           {showUserForm && (
             <AddUserForm
               groupData={groupData}

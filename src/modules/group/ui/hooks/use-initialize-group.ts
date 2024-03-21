@@ -6,7 +6,7 @@ import { GroupRepository } from 'modules/group/domain/Group.repository'
 import { createStorageGroupRepository } from 'modules/group/infrastructure/repositories/StorageGroup.repository'
 import { User } from 'modules/user/domain/User'
 import { useContext, useEffect } from 'react'
-import { ExpensesMainContext } from 'pages/expenses-main/home.context'
+import { ExpensesMainContext } from 'pages/home/home.context'
 
 export const useInitializeGroup = function (
   setGroupData: (data: Group) => void,
@@ -59,7 +59,6 @@ export const useInitializeGroup = function (
       if (group.members.size === 0) {
         const updatedTableData = await getGroupQuery(repository).execute(id)
         setGroupData(updatedTableData!)
-        setShowExpenseForm(false)
       }
     }
     _getGroupWhenInit()

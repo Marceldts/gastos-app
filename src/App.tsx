@@ -1,7 +1,7 @@
 import './App.css'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
-import { Home } from 'pages/expenses-main/home'
-import { ExpensesMainContextProvider } from 'pages/expenses-main/home.context'
+import { Home } from 'pages/home/home'
+import { ExpensesMainContextProvider } from 'pages/home/home.context'
 
 function App() {
   return (
