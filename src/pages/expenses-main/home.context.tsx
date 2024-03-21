@@ -13,7 +13,7 @@ export const ExpensesMainContextProvider = ({ children }: { children: React.Reac
   const [urlParams] = useSearchParams()
   const showExpenseParam = urlParams.get('addExpense') === 'true'
   const showUserParam = urlParams.get('addUser') === 'true'
-  const [showExpenseForm, setShowExpenseForm] = useState(showExpenseParam ?? false)
+  const [showExpenseForm, setShowExpenseForm] = useState((!showUserParam && showExpenseParam) ?? false)
   const [showUserForm, setShowUserForm] = useState((!showExpenseParam && showUserParam) ?? false)
   const { id = '1' } = useParams()
 
