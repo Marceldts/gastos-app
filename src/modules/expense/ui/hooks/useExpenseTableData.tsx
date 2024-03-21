@@ -3,18 +3,20 @@ import { useEffect, useState } from 'react'
 import { Group } from 'modules/group/domain/Group'
 import { Expense } from 'modules/expense/domain/Expense'
 
+export interface TableData {
+  header: {
+    text: string
+    buttons: { text: string; onPress: () => void }[]
+  }
+  body: (string | number)[][]
+}
+
 export function useExpenseTableData(
   groupData: Group,
   setShowExpenseForm: (show: boolean) => void,
   setShowUserForm: (show: boolean) => void,
 ) {
-  const [tableData, setTableData] = useState<{
-    header: {
-      text: string
-      buttons: { text: string; onPress: () => void }[]
-    }
-    body: (string | number)[][]
-  }>({
+  const [tableData, setTableData] = useState<TableData>({
     header: {
       text: 'Gastos',
       buttons: [
