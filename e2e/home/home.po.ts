@@ -15,11 +15,15 @@ export class HomePageObject {
   }
 
   async goToHomeWithExpensesForm(page: Page) {
-    await page.goto('http://localhost:3000/home?addExpense=true')
+    await page.goto('http://localhost:3000/home/1?addExpense=true')
   }
 
   async goToHomeWithUserForm(page: Page) {
-    await page.goto('http://localhost:3000/home?addUser=true')
+    await page.goto('http://localhost:3000/home/1?addUser=true')
+  }
+
+  async goToEmptyHomyPage(page: Page) {
+    await page.goto('http://localhost:3000/home/1990291')
   }
 
   async clickAddExpense(page: Page) {
@@ -36,6 +40,10 @@ export class HomePageObject {
     const isAñadirGastoVisible = await page.isVisible('text=Añadir gasto')
     const isAñadirMiembroVisible = await page.isVisible('text=Añadir miembro al grupo')
     return isGastosVisible && isBalanceVisible && isAñadirGastoVisible && isAñadirMiembroVisible
+  }
+
+  async isNoExpensesVisible(page: Page) {
+    return await page.isVisible('text=No hay gastos')
   }
 
   async clickSend(page: Page) {
@@ -56,6 +64,10 @@ export class HomePageObject {
 
   async isTextVisible(page: Page, text: string) {
     return await page.locator(`text=${text}`).isVisible()
+  }
+
+  async isGroupEmptyWarningVisible(page: Page) {
+    return await page.locator('text=No hay usuarios en el grupo').isVisible()
   }
 
   async fillAmount(page: Page, amount: string) {
@@ -96,6 +108,10 @@ export class HomePageObject {
       isUnique = !(await this._isUsernameRepeated(page, username))
     } while (!isUnique)
     return username
+  }
+
+  async urlIncludesParam(page: Page, param: string) {
+    return page.url().includes(param)
   }
 
   private async _isUsernameRepeated(page: Page, username: string) {

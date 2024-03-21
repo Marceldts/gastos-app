@@ -13,7 +13,12 @@ test.afterEach(async ({ page }) => {
 
 test.describe('Expenses main', () => {
   test('should show the expenses main page', async ({ page }) => {
-    await homePageObject.isMainTableVisible(page)
+    expect(await homePageObject.isMainTableVisible(page)).toBeTruthy()
+  })
+
+  test('should show an empty table when entering to one of the secondary pages', async ({ page }) => {
+    await homePageObject.goToEmptyHomyPage(page)
+    expect(await homePageObject.isNoExpensesVisible(page)).toBeTruthy()
   })
 
   test.describe('Add expense', () => {
@@ -21,8 +26,33 @@ test.describe('Expenses main', () => {
       await homePageObject.clickAddExpense(page)
       homePageObject.setAlertErrorMessageListener(page)
     })
+
+    test('should add "addExpense=true" to the URL when the add expense button is clicked', async ({ page }) => {
+      expect(await homePageObject.urlIncludesParam(page, 'addExpense=true')).toBeTruthy()
+    })
+
+    test('should remove "addExpense=true" from the URL when the cancel button is clicked', async ({ page }) => {
+      await homePageObject.clickCancel(page)
+      expect(await homePageObject.urlIncludesParam(page, 'addExpense=true')).toBeFalsy()
+    })
+
     test('should show the add expense form', async ({ page }) => {
       expect(await homePageObject.isExpenseFormVisible(page)).toBeTruthy()
+    })
+
+    test('should show the add expense form when navigating to the URL with the addExpense param when there are users in that group', async ({
+      page,
+    }) => {
+      await homePageObject.goToHomeWithExpensesForm(page)
+      expect(await homePageObject.isExpenseFormVisible(page)).toBeTruthy()
+    })
+
+    test('should show the warning that there are no users in the group when navigating to the URL with the addExpense param', async ({
+      page,
+    }) => {
+      await homePageObject.goToEmptyHomyPage(page)
+      await homePageObject.clickAddExpense(page)
+      expect(await homePageObject.isGroupEmptyWarningVisible(page)).toBeTruthy()
     })
 
     test('should hide the add expense form when the cancel button is clicked', async ({ page }) => {
@@ -91,6 +121,20 @@ test.describe('Expenses main', () => {
       await homePageObject.clickSend(page)
       expect(await homePageObject.isTextVisible(page, username)).toBeTruthy()
       expect(await homePageObject.isUserFormVisible(page)).toBeFalsy()
+    })
+
+    test('should add "addUser=true" to the URL when the add user button is clicked', async ({ page }) => {
+      expect(await homePageObject.urlIncludesParam(page, 'addUser=true')).toBeTruthy()
+    })
+
+    test('should remove "addUser=true" from the URL when the cancel button is clicked', async ({ page }) => {
+      await homePageObject.clickCancel(page)
+      expect(await homePageObject.urlIncludesParam(page, 'addUser=true')).toBeFalsy()
+    })
+
+    test('should open the add user form when navigating to the URL with the addUser param', async ({ page }) => {
+      await homePageObject.goToHomeWithUserForm(page)
+      expect(await homePageObject.isUserFormVisible(page)).toBeTruthy()
     })
   })
 })
