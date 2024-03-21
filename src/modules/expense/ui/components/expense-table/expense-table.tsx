@@ -1,14 +1,9 @@
 import { CustomTable } from 'shared/ui/components/03_templates/table/CustomTable'
+import { TableData } from '../../hooks/useExpenseTableData'
 import './expense-table.css'
 
 export interface ExpenseTableProps {
-  tableData: {
-    header: {
-      text: string
-      buttons: { text: string; onPress: () => void }[]
-    }
-    body: (string | number)[][]
-  }
+  tableData: TableData
   setShowExpenseForm: (show: boolean) => void
   setShowUserForm: (show: boolean) => void
 }

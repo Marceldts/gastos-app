@@ -14,7 +14,7 @@ export const CustomTable = (props: CustomTableProps) => {
   const { header, body } = data
 
   return (
-    <table className={`group-table ${className ?? ''}`}>
+    <table role="table" className={`group-table ${className ?? ''}`}>
       <CustomTableHeader headerText={header.text} buttons={header.buttons} />
       {body && <CustomTableBody className={bodyClassName} data={body} />}
     </table>
