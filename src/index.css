@@ -34,4 +34,7 @@ code {
 
   --color-positive-balance: #2ecc71;
   --color-negative-balance: #e74c3c;
+
+  --color-card-background: #fbf7e3;
+  --color-card-border: #c0c0c0;
 }

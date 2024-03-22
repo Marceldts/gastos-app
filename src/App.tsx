@@ -5,19 +5,21 @@ import { ExpensesMainContextProvider } from 'pages/home/home.context'
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route
-          path="home/:id"
-          element={
-            <ExpensesMainContextProvider>
-              <Home />
-            </ExpensesMainContextProvider>
-          }
-        ></Route>
-        <Route path="*" element={<Navigate to="home/1" replace />} />
-      </Routes>
-    </BrowserRouter>
+    <div className="App">
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="home/:id"
+            element={
+              <ExpensesMainContextProvider>
+                <Home />
+              </ExpensesMainContextProvider>
+            }
+          ></Route>
+          <Route path="*" element={<Navigate to="home/1" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </div>
   )
 }
 

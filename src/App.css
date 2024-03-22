@@ -198,6 +198,7 @@ table {
 }
 
 .balance {
+  padding: 10px 20px;
   margin: auto;
 }
 
@@ -206,4 +207,22 @@ select {
   padding: 8px;
   margin-top: 5px;
   box-sizing: border-box;
+}
+
+.debts {
+  padding: 10px 20px;
+  margin: auto;
+}
+
+.debts ul {
+  padding: 0;
+  list-style-type: none;
+}
+
+.debts li {
+  margin-bottom: 5px;
+}
+
+.debts h3 {
+  text-align: center;
 }

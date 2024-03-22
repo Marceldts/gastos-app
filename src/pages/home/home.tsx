@@ -8,7 +8,7 @@ import { addMemberCommand } from 'modules/group/application/add/add-member.comma
 import { User, UserError, getNewUserId } from 'modules/user/domain/User'
 import { getGroupBalanceQuery } from 'modules/group/application/get/get-group-balance.query'
 import { Debt } from 'modules/debt/domain/Debt'
-import { DebtList } from 'modules/debt/ui/debts-list'
+import { DebtList } from 'modules/debt/ui/components/debts-list'
 import { GroupBalance } from 'modules/group/ui/components/group-balance/group-balance'
 import { AddUserForm } from 'modules/group/ui/components/add-user-form/add-user-form'
 import { AddExpenseForm, ExpenseFormData } from 'modules/group/ui/components/add-expense-form/add-expense-form'
@@ -19,6 +19,7 @@ import { ExpenseError } from 'modules/expense/domain/Expense'
 import { ExpensesMainContext } from './home.context'
 import { useSearchParams } from 'react-router-dom'
 import { EmptyGroup } from 'modules/group/ui/components/empty-group/empty-group'
+import { getGroupDebtQuery } from 'modules/group/application/get/get-group-debt.query'
 
 export const Home = () => {
   const [groupData, setGroupData] = useState({} as Group)
@@ -42,6 +43,15 @@ export const Home = () => {
   }, [groupData])
 
   useEffect(() => {
+    const _getGroupAndGetDebts = async () => {
+      const updatedTableData = await getGroupQuery(repository).execute(id)
+      getGroupDebts(updatedTableData)
+    }
+    if (!balance) return
+    _getGroupAndGetDebts()
+  }, [balance])
+
+  useEffect(() => {
     if (showExpenseForm) {
       setShowUserForm(false)
     }
@@ -55,7 +65,12 @@ export const Home = () => {
     _setFormsParams()
   }, [showUserForm])
 
-  useInitializeGroup(setGroupData, setBalance, setShowExpenseForm)
+  useInitializeGroup(setGroupData, setBalance)
+
+  const getGroupDebts = async (groupToGetDebts: Group) => {
+    const debts = await getGroupDebtQuery(repository).execute(groupToGetDebts)
+    setDebts(debts)
+  }
 
   const handleExpenseFormSubmit = async (e: SyntheticEvent, expenseFormData: ExpenseFormData) => {
     try {
@@ -105,7 +120,7 @@ export const Home = () => {
   }
 
   return (
-    <div className="App">
+    <>
       <ExpenseTable tableData={tableData} setShowUserForm={setShowUserForm} setShowExpenseForm={setShowExpenseForm} />
       {(showExpenseForm || showUserForm) && (
         <section className="forms">
@@ -129,6 +144,6 @@ export const Home = () => {
       )}
       <GroupBalance balance={balance} />
       <DebtList debts={debts} />
-    </div>
+    </>
   )
 }
