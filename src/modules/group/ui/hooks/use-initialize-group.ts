@@ -11,7 +11,6 @@ import { ExpensesMainContext } from 'pages/home/home.context'
 export const useInitializeGroup = function (
   setGroupData: (data: Group) => void,
   setBalance: (balance: Map<User, number> | null) => void,
-  setShowExpenseForm: (show: boolean) => void,
 ) {
   const { id } = useContext(ExpensesMainContext)
   const repository: GroupRepository = createStorageGroupRepository(localStorage)
