@@ -1,22 +1,23 @@
 import './App.css'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
-import { Home } from 'pages/home/home'
-import { ExpensesMainContextProvider } from 'pages/home/home.context'
+import { GroupPage } from 'pages/group/group'
+import { ExpensesMainContextProvider } from 'pages/group/group.context'
 
+//TODO: Create new landing page called home
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
           <Route
-            path="home/:id"
+            path="group/:id"
             element={
               <ExpensesMainContextProvider>
-                <Home />
+                <GroupPage />
               </ExpensesMainContextProvider>
             }
           ></Route>
-          <Route path="*" element={<Navigate to="home/1" replace />} />
+          <Route path="*" element={<Navigate to="group/1" replace />} />
         </Routes>
       </BrowserRouter>
     </div>

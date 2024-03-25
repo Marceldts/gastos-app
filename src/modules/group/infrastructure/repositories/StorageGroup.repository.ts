@@ -4,6 +4,13 @@ import { Group, addExpenseToGroup, addMemberToGroup } from 'modules/group/domain
 import { GroupRepository } from 'modules/group/domain/Group.repository'
 import { User } from 'modules/user/domain/User'
 
+//TODO: Add method to create a new group
+//      It gets a param to specify the group id
+//      It can also get a param to generate it with test data
+//      It returns the group object
+//      It saves the group in the storage
+//      It throws an error if the group already exists
+//      To manage the error, we'll show a message to the user with the possibility to navigate to the group, cancel the operation or clean that group's data
 export const createStorageGroupRepository = (storage: Storage): GroupRepository => {
   return {
     //We have to convert the Arrays to Sets because the Set object is not serializable, and thus, cannot be saved in Storage.

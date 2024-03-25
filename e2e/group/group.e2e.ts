@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { HomePageObject } from './home.po'
+import { HomePageObject } from './group.po'
 
 const homePageObject = new HomePageObject()
 
@@ -17,7 +17,7 @@ test.describe('Expenses main', () => {
   })
 
   test('should show an empty table when entering to one of the secondary pages', async ({ page }) => {
-    await homePageObject.goToEmptyHomyPage(page)
+    await homePageObject.goToEmptyGroupPage(page)
     expect(await homePageObject.isNoExpensesVisible(page)).toBeTruthy()
   })
 
@@ -43,14 +43,14 @@ test.describe('Expenses main', () => {
     test('should show the add expense form when navigating to the URL with the addExpense param when there are users in that group', async ({
       page,
     }) => {
-      await homePageObject.goToHomeWithExpensesForm(page)
+      await homePageObject.goToGroupWithExpensesForm(page)
       expect(await homePageObject.isExpenseFormVisible(page)).toBeTruthy()
     })
 
     test('should show the warning that there are no users in the group when navigating to the URL with the addExpense param', async ({
       page,
     }) => {
-      await homePageObject.goToEmptyHomyPage(page)
+      await homePageObject.goToEmptyGroupPage(page)
       await homePageObject.clickAddExpense(page)
       expect(await homePageObject.isGroupEmptyWarningVisible(page)).toBeTruthy()
     })
@@ -133,7 +133,7 @@ test.describe('Expenses main', () => {
     })
 
     test('should open the add user form when navigating to the URL with the addUser param', async ({ page }) => {
-      await homePageObject.goToHomeWithUserForm(page)
+      await homePageObject.goToGroupWithUserForm(page)
       expect(await homePageObject.isUserFormVisible(page)).toBeTruthy()
     })
   })

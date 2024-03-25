@@ -14,16 +14,16 @@ export class HomePageObject {
     await page.goto('http://localhost:3000/')
   }
 
-  async goToHomeWithExpensesForm(page: Page) {
-    await page.goto('http://localhost:3000/home/1?addExpense=true')
+  async goToGroupWithExpensesForm(page: Page) {
+    await page.goto('http://localhost:3000/group/1?addExpense=true')
   }
 
-  async goToHomeWithUserForm(page: Page) {
-    await page.goto('http://localhost:3000/home/1?addUser=true')
+  async goToGroupWithUserForm(page: Page) {
+    await page.goto('http://localhost:3000/group/1?addUser=true')
   }
 
-  async goToEmptyHomyPage(page: Page) {
-    await page.goto('http://localhost:3000/home/1990291')
+  async goToEmptyGroupPage(page: Page) {
+    await page.goto('http://localhost:3000/group/1990291')
   }
 
   async clickAddExpense(page: Page) {

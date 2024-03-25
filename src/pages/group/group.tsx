@@ -16,12 +16,12 @@ import { ExpenseTable } from 'modules/expense/ui/components/expense-table/expens
 import { useExpenseTableData } from 'modules/expense/ui/hooks/useExpenseTableData'
 import { useInitializeGroup } from 'modules/group/ui/hooks/use-initialize-group'
 import { ExpenseError } from 'modules/expense/domain/Expense'
-import { ExpensesMainContext } from './home.context'
+import { ExpensesMainContext } from './group.context'
 import { useSearchParams } from 'react-router-dom'
 import { EmptyGroup } from 'modules/group/ui/components/empty-group/empty-group'
 import { getGroupDebtQuery } from 'modules/group/application/get/get-group-debt.query'
 
-export const Home = () => {
+export const GroupPage = () => {
   const [groupData, setGroupData] = useState({} as Group)
   const [debts, setDebts] = useState([] as Debt[])
 

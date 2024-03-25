@@ -6,7 +6,7 @@ import { GroupRepository } from 'modules/group/domain/Group.repository'
 import { createStorageGroupRepository } from 'modules/group/infrastructure/repositories/StorageGroup.repository'
 import { User } from 'modules/user/domain/User'
 import { useContext, useEffect } from 'react'
-import { ExpensesMainContext } from 'pages/home/home.context'
+import { ExpensesMainContext } from 'pages/group/group.context'
 
 export const useInitializeGroup = function (
   setGroupData: (data: Group) => void,
