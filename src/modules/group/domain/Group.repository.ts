@@ -10,4 +10,5 @@ export interface GroupRepository {
   addExpense(group: Group, expense: Expense): Promise<void>
   addMember(group: Group, member: User): Promise<void>
   getGroupDebts(group: Group): Promise<Debt[]>
+  getGroupsIds(): Promise<string[]>
 }

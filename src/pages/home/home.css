@@ -57,3 +57,15 @@ dialog > .close {
   font-weight: bold;
   cursor: pointer;
 }
+
+li {
+  padding: 10px;
+  margin: 10px 0;
+  list-style: circle;
+}
+
+li > a {
+  text-decoration: none;
+  color: var(--color-text);
+  font-weight: 500;
+}

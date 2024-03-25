@@ -80,5 +80,15 @@ export const createStorageGroupRepository = (storage: Storage): GroupRepository 
 
       return debts
     },
+    getGroupsIds: async function (): Promise<string[]> {
+      const groupsIds: string[] = []
+      for (let i = 0; i < storage.length; i++) {
+        const key = storage.key(i)
+        if (key?.includes('group')) {
+          groupsIds.push(key.split(' ')[1])
+        }
+      }
+      return groupsIds
+    },
   }
 }
