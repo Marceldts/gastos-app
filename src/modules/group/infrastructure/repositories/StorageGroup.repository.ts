@@ -1,6 +1,6 @@
 import { Debt } from 'modules/debt/domain/Debt'
 import { Expense } from 'modules/expense/domain/Expense'
-import { Group, addExpenseToGroup, addMemberToGroup } from 'modules/group/domain/Group'
+import { Group, GroupAlreadyExists, addExpenseToGroup, addMemberToGroup } from 'modules/group/domain/Group'
 import { GroupRepository } from 'modules/group/domain/Group.repository'
 import { User } from 'modules/user/domain/User'
 
@@ -13,6 +13,17 @@ import { User } from 'modules/user/domain/User'
 //      To manage the error, we'll show a message to the user with the possibility to navigate to the group, cancel the operation or clean that group's data
 export const createStorageGroupRepository = (storage: Storage): GroupRepository => {
   return {
+    createGroup: async function (id: string): Promise<Group> {
+      const groupAlreadyExists = !!(storage.getItem(`group ${id}`) || storage.getItem(`group${id}`)) ?? false
+      if (groupAlreadyExists) throw new GroupAlreadyExists()
+      const emptyGroup: Group = {
+        id: `${id}`,
+        expenseList: new Set(),
+        members: new Set(),
+      }
+      await this.saveGroup(emptyGroup)
+      return emptyGroup
+    },
     //We have to convert the Arrays to Sets because the Set object is not serializable, and thus, cannot be saved in Storage.
     getGroup: async function (id: string): Promise<Group> {
       const stringifiedGroup = storage.getItem(`group ${id}`)
@@ -22,13 +33,7 @@ export const createStorageGroupRepository = (storage: Storage): GroupRepository 
         parsedGroup.expenseList = new Set(parsedGroup.expenseList)
         return parsedGroup
       } else {
-        const emptyGroup: Group = {
-          id: `${id}`,
-          expenseList: new Set(),
-          members: new Set(),
-        }
-        await this.saveGroup(emptyGroup)
-        return emptyGroup
+        return await this.createGroup(id)
       }
     },
     //We have to convert the Sets to Arrays because the Set object is not serializable, and thus, cannot be saved in Storage.

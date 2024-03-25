@@ -3,6 +3,7 @@ import { GroupRepository } from 'modules/group/domain/Group.repository'
 import { User } from 'modules/user/domain/User'
 
 export const groupRepositoryMock: GroupRepository = {
+  createGroup: jest.fn(),
   getGroup: jest.fn().mockImplementation(() => {
     return {
       members: new Set<User>(),

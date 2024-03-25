@@ -1,0 +1,59 @@
+main {
+  padding: 20px;
+}
+.create-group {
+  display: block;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+dialog {
+  border: 2px solid #ccc;
+  margin: auto;
+}
+.dialog-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+}
+
+.dialog-content > input {
+  width: 100%;
+  padding: 10px;
+}
+
+.dialog-content > button {
+  margin-top: 10px;
+  padding: 10px;
+  width: 100%;
+  background-color: var(--color-secondary);
+  color: var(--color-text-light);
+  border: none;
+  cursor: pointer;
+}
+
+.dialog-content > button:hover {
+  background-color: var(--color-button-hover);
+}
+
+.dialog-content > label {
+  padding: 0 0 10px 0;
+  align-self: flex-start;
+}
+
+.dialog-background {
+  background-color: rgba(0, 0, 0, 0.1);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+dialog > .close {
+  font-weight: bold;
+  cursor: pointer;
+}

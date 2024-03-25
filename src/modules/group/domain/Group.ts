@@ -9,6 +9,7 @@ export interface Group {
 
 export const ensureIsGroupValid = ({ id, members, expenseList }: Group): void => {
   const errors: Error[] = []
+  if (_groupIdCannotBeEmptyNorSpaces(id)) errors.push(new GroupIdEmptyError())
   if (!_everyMemberHasUniqueIds(members)) errors.push(new GroupRepeatedIdError())
   if (_cannotHaveExpensesWithoutMembers({ id, members, expenseList }))
     errors.push(new GroupExpenseWithoutMembersError())
@@ -67,6 +68,18 @@ export class GroupExpenseWithoutMembersError extends Error {
   }
 }
 
+export class GroupAlreadyExists extends Error {
+  constructor() {
+    super('Group already exists')
+  }
+}
+
+export class GroupIdEmptyError extends Error {
+  constructor() {
+    super('Group id cannot be empty nor spaces.')
+  }
+}
+
 const _everyMemberHasUniqueIds = (members: Set<User>): boolean => {
   const userIdsSet = new Set<number>()
 
@@ -80,4 +93,8 @@ const _everyMemberHasUniqueIds = (members: Set<User>): boolean => {
 
 const _cannotHaveExpensesWithoutMembers = ({ members, expenseList }: Group): boolean => {
   return members.size === 0 && expenseList.size > 0
+}
+
+const _groupIdCannotBeEmptyNorSpaces = (id: string): boolean => {
+  return id.trim().length === 0
 }
