@@ -19,7 +19,7 @@ function App() {
               </ExpensesMainContextProvider>
             }
           ></Route>
-          <Route path="*" element={<Navigate to="group/1" replace />} />
+          <Route path="*" element={<Navigate to="home" replace />} />
         </Routes>
       </BrowserRouter>
     </div>
