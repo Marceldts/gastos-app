@@ -1,7 +1,7 @@
 import { createContext, useState } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 
-interface ExpensesMainContextType {
+interface GroupPageContextType {
   readonly id: string
   showExpenseForm: boolean
   setShowExpenseForm: (value: boolean) => void
@@ -9,7 +9,7 @@ interface ExpensesMainContextType {
   setShowUserForm: (value: boolean) => void
 }
 
-export const ExpensesMainContextProvider = ({ children }: { children: React.ReactNode }) => {
+export const GroupPageContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [urlParams] = useSearchParams()
   const showExpenseParam = urlParams.get('addExpense') === 'true'
   const showUserParam = urlParams.get('addUser') === 'true'
@@ -18,13 +18,13 @@ export const ExpensesMainContextProvider = ({ children }: { children: React.Reac
   const { id = '1' } = useParams()
 
   return (
-    <ExpensesMainContext.Provider value={{ id, showExpenseForm, setShowExpenseForm, showUserForm, setShowUserForm }}>
+    <GroupPageContext.Provider value={{ id, showExpenseForm, setShowExpenseForm, showUserForm, setShowUserForm }}>
       {children}
-    </ExpensesMainContext.Provider>
+    </GroupPageContext.Provider>
   )
 }
 
-const defaultExpensesMainContext = {
+const defaultGroupPageContext = {
   id: '1',
   showExpenseForm: false,
   setShowExpenseForm: (_: boolean) => {},
@@ -32,4 +32,4 @@ const defaultExpensesMainContext = {
   setShowUserForm: (_: boolean) => {},
 }
 
-export const ExpensesMainContext = createContext<ExpensesMainContextType>(defaultExpensesMainContext)
+export const GroupPageContext = createContext<GroupPageContextType>(defaultGroupPageContext)

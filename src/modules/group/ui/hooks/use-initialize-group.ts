@@ -6,13 +6,13 @@ import { GroupRepository } from 'modules/group/domain/Group.repository'
 import { createStorageGroupRepository } from 'modules/group/infrastructure/repositories/StorageGroup.repository'
 import { User } from 'modules/user/domain/User'
 import { useContext, useEffect } from 'react'
-import { ExpensesMainContext } from 'pages/group/group.context'
+import { GroupPageContext } from 'pages/group/group.context'
 
 export const useInitializeGroup = function (
   setGroupData: (data: Group) => void,
   setBalance: (balance: Map<User, number> | null) => void,
 ) {
-  const { id } = useContext(ExpensesMainContext)
+  const { id } = useContext(GroupPageContext)
   const repository: GroupRepository = createStorageGroupRepository(localStorage)
   const testGroup: Group = {
     id: '1',

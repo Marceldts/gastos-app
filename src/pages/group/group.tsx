@@ -16,7 +16,7 @@ import { ExpenseTable } from 'modules/expense/ui/components/expense-table/expens
 import { useExpenseTableData } from 'modules/expense/ui/hooks/useExpenseTableData'
 import { useInitializeGroup } from 'modules/group/ui/hooks/use-initialize-group'
 import { ExpenseError } from 'modules/expense/domain/Expense'
-import { ExpensesMainContext } from './group.context'
+import { GroupPageContext } from './group.context'
 import { useSearchParams } from 'react-router-dom'
 import { EmptyGroup } from 'modules/group/ui/components/empty-group/empty-group'
 import { getGroupDebtQuery } from 'modules/group/application/get/get-group-debt.query'
@@ -26,7 +26,7 @@ export const GroupPage = () => {
   const [groupData, setGroupData] = useState({} as Group)
   const [debts, setDebts] = useState([] as Debt[])
 
-  const { id, showUserForm, setShowUserForm, showExpenseForm, setShowExpenseForm } = useContext(ExpensesMainContext)
+  const { id, showUserForm, setShowUserForm, showExpenseForm, setShowExpenseForm } = useContext(GroupPageContext)
   const { tableData } = useExpenseTableData(groupData, setShowExpenseForm, setShowUserForm)
   const [balance, setBalance] = useState<Map<User, number> | null>(null)
 
