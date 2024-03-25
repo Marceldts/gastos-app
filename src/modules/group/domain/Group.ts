@@ -76,7 +76,7 @@ export class GroupAlreadyExists extends Error {
 
 export class GroupIdEmptyError extends Error {
   constructor() {
-    super('Group id cannot be empty nor spaces.')
+    super('Group id cannot be empty nor spaces.\n')
   }
 }
 

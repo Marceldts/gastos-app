@@ -17,7 +17,9 @@ describe('isGroupNotValid', () => {
     const invalidUser2: User = UserMother.withInvalidId()
     const invalidMockedGroup: Group = GroupMother.withMembers(new Set([invalidUser1, invalidUser2]))
 
-    expect(() => ensureIsGroupValid(invalidMockedGroup)).toThrow('\nMembers list has duplicate ids.\n')
+    expect(() => ensureIsGroupValid(invalidMockedGroup)).toThrow(
+      '\nGroup id cannot be empty nor spaces.\nMembers list has duplicate ids.\n',
+    )
   })
   test('cannot have expenses without members', () => {
     const invalidMockedGroup: Group = GroupMother.invalidWithExpensesWithoutMembers()
