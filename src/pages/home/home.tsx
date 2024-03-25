@@ -4,7 +4,7 @@ import { GroupsList } from 'modules/group/ui/components/groups-list/groups-list'
 
 export const HomePage = () => {
   return (
-    <main>
+    <main className="home">
       <h1>Inicio</h1>
       <CreateGroup />
       <GroupsList />

@@ -166,8 +166,6 @@
 .App {
   max-width: 1500px;
   margin: auto;
-  display: flex;
-  flex-direction: column;
 }
 
 @media (min-width: 768px) {
@@ -214,15 +212,21 @@ select {
   margin: auto;
 }
 
-.debts ul {
-  padding: 0;
-  list-style-type: none;
-}
-
 .debts li {
   margin-bottom: 5px;
 }
 
-.debts h3 {
-  text-align: center;
+.home-button {
+  padding: 8px 16px;
+  margin: 10px;
+  background-color: var(--color-secondary);
+  color: var(--color-text-light);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.home-button > a {
+  text-decoration: none;
+  color: var(--color-text-light);
 }

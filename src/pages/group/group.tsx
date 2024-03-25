@@ -20,6 +20,7 @@ import { ExpensesMainContext } from './group.context'
 import { useSearchParams } from 'react-router-dom'
 import { EmptyGroup } from 'modules/group/ui/components/empty-group/empty-group'
 import { getGroupDebtQuery } from 'modules/group/application/get/get-group-debt.query'
+import { HomeButton } from 'shared/ui/components/00_atoms/home-button/home-button'
 
 export const GroupPage = () => {
   const [groupData, setGroupData] = useState({} as Group)
@@ -121,29 +122,32 @@ export const GroupPage = () => {
 
   return (
     <>
-      <ExpenseTable tableData={tableData} setShowUserForm={setShowUserForm} setShowExpenseForm={setShowExpenseForm} />
-      {(showExpenseForm || showUserForm) && (
-        <section className="forms">
-          {showExpenseForm && thereAreMembers && (
-            <AddExpenseForm
-              members={groupData.members}
-              handleSubmitForm={handleExpenseFormSubmit}
-              handleCancelForm={handleExpenseFormCancel}
-            />
-          )}
-          {showExpenseForm && !thereAreMembers && <EmptyGroup handleCancelForm={handleExpenseFormCancel} />}
-          {showUserForm && (
-            <AddUserForm
-              groupData={groupData}
-              submitHandler={handleUserFormSubmit}
-              cancelHandler={handleUserFormCancel}
-              setShowUserForm={setShowUserForm}
-            />
-          )}
-        </section>
-      )}
-      <GroupBalance balance={balance} />
-      <DebtList debts={debts} />
+      <HomeButton />
+      <main className="group">
+        <ExpenseTable tableData={tableData} setShowUserForm={setShowUserForm} setShowExpenseForm={setShowExpenseForm} />
+        {(showExpenseForm || showUserForm) && (
+          <section className="forms">
+            {showExpenseForm && thereAreMembers && (
+              <AddExpenseForm
+                members={groupData.members}
+                handleSubmitForm={handleExpenseFormSubmit}
+                handleCancelForm={handleExpenseFormCancel}
+              />
+            )}
+            {showExpenseForm && !thereAreMembers && <EmptyGroup handleCancelForm={handleExpenseFormCancel} />}
+            {showUserForm && (
+              <AddUserForm
+                groupData={groupData}
+                submitHandler={handleUserFormSubmit}
+                cancelHandler={handleUserFormCancel}
+                setShowUserForm={setShowUserForm}
+              />
+            )}
+          </section>
+        )}
+        <GroupBalance balance={balance} />
+        <DebtList debts={debts} />
+      </main>
     </>
   )
 }
