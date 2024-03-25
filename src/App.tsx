@@ -5,7 +5,6 @@ import { GroupPageContextProvider } from 'pages/group/group.context'
 import { HomePage } from 'pages/home/home'
 import { HomePageContextProvider } from 'pages/home/home.context'
 
-//TODO: Create new landing page called home
 function App() {
   return (
     <div className="App">
