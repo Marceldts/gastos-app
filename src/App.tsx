@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { GroupPage } from 'pages/group/group'
 import { GroupPageContextProvider } from 'pages/group/group.context'
 import { HomePage } from 'pages/home/home'
+import { HomePageContextProvider } from 'pages/home/home.context'
 
 //TODO: Create new landing page called home
 function App() {
@@ -10,7 +11,14 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="home" element={<HomePage />}></Route>
+          <Route
+            path="home"
+            element={
+              <HomePageContextProvider>
+                <HomePage />
+              </HomePageContextProvider>
+            }
+          ></Route>
           <Route
             path="group/:id"
             element={

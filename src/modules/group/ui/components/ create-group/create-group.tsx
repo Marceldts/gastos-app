@@ -1,14 +1,21 @@
 import { createGroupCommand } from 'modules/group/application/create/create-group.command'
 import { GroupAlreadyExists, GroupError } from 'modules/group/domain/Group'
 import { createStorageGroupRepository } from 'modules/group/infrastructure/repositories/StorageGroup.repository'
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { HomePageContext } from 'pages/home/home.context'
+import { useContext, useEffect, useState } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 export const CreateGroup = () => {
-  const [showCreateGroupModal, setShowCreateGroupModal] = useState(false)
+  const { showCreateGroup, setShowCreateGroup } = useContext(HomePageContext)
+  const [params, setParams] = useSearchParams()
   const [groupId, setGroupId] = useState('')
   const navigate = useNavigate()
   const repository = createStorageGroupRepository(localStorage)
+
+  useEffect(() => {
+    setParams(showCreateGroup ? `createGroup=true` : '')
+  }, [showCreateGroup])
+
   const createGroup = async () => {
     try {
       await createGroupCommand(repository).execute(groupId)
@@ -29,15 +36,15 @@ export const CreateGroup = () => {
   return (
     <>
       <section className="create-group">
-        <button onClick={() => setShowCreateGroupModal(true)}>
+        <button onClick={() => setShowCreateGroup(true)}>
           <h2>Crear nuevo grupo</h2>
         </button>
       </section>
 
-      {showCreateGroupModal && (
+      {showCreateGroup && (
         <div className="dialog-background">
           <dialog open>
-            <span className="close" onClick={() => setShowCreateGroupModal(false)}>
+            <span className="close" onClick={() => setShowCreateGroup(false)}>
               &times;
             </span>
             <div className="dialog-content">
