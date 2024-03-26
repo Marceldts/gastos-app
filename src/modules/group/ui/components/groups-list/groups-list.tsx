@@ -24,23 +24,28 @@ export const GroupsList = () => {
 
   return (
     <section>
-      <h2>Grupos ya creados:</h2>
-      <nav>
-        <ul>
-          {groupIds.map(id => (
-            <li key={id}>
-              <Link to={`/group/${id}`}>Group {id}</Link>
-              <img
-                onClick={() => deleteGroup(id)}
-                className="icon"
-                src={`${process.env.PUBLIC_URL}/assets/icons/trash.svg`}
-                title="Delete group"
-                alt="Delete group icon"
-              />
-            </li>
-          ))}
-        </ul>
-      </nav>
+      {groupIds.length === 0 && <h2>No hay grupos creados</h2>}
+      {groupIds.length > 0 && (
+        <>
+          <h2>Grupos ya creados:</h2>
+          <nav>
+            <ul>
+              {groupIds.map(id => (
+                <li key={id}>
+                  <Link to={`/group/${id}`}>Group {id}</Link>
+                  <img
+                    onClick={() => deleteGroup(id)}
+                    className="icon"
+                    src={`${process.env.PUBLIC_URL}/assets/icons/trash.svg`}
+                    title="Delete group"
+                    alt="Delete group icon"
+                  />
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </>
+      )}
     </section>
   )
 }
