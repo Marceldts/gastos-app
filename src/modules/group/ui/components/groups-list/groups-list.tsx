@@ -14,7 +14,7 @@ export const GroupsList = () => {
   }, [])
   return (
     <section>
-      <h2>Lista de grupos ya creados:</h2>
+      <h2>Ir a alguno de los grupos ya creados:</h2>
       <nav>
         <ul>
           {groupIds.map(id => (
