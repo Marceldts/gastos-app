@@ -32,6 +32,10 @@ export const addExpenseToGroup = (group: Group, expense: Expense): void => {
   let payerFound = false
   const totalReceivers = group.members.size
   const amountPerReceiver = expense.amount / totalReceivers
+  const minAmountPerReceiver = 0.01
+
+  if (amountPerReceiver < minAmountPerReceiver) throw new GroupInsuficientAmountError()
+
   group.members.forEach(user => {
     if (user.id === expense.payerId) {
       payerFound = true
@@ -41,7 +45,7 @@ export const addExpenseToGroup = (group: Group, expense: Expense): void => {
   })
 
   if (!payerFound) {
-    throw new Error('No se encontró al pagador en el conjunto de usuarios.')
+    throw new GroupPayerNotFoundError()
   }
 }
 
@@ -68,7 +72,7 @@ export class GroupExpenseWithoutMembersError extends Error {
   }
 }
 
-export class GroupAlreadyExists extends Error {
+export class GroupAlreadyExistsError extends Error {
   constructor() {
     super('Group already exists')
   }
@@ -77,6 +81,18 @@ export class GroupAlreadyExists extends Error {
 export class GroupIdEmptyError extends Error {
   constructor() {
     super('Group id cannot be empty nor spaces.\n')
+  }
+}
+
+export class GroupPayerNotFoundError extends Error {
+  constructor() {
+    super('No se encontró al pagador en el conjunto de usuarios.')
+  }
+}
+
+export class GroupInsuficientAmountError extends Error {
+  constructor() {
+    super('La cantidad a pagar por cada miembro del grupo es insuficiente.')
   }
 }
 

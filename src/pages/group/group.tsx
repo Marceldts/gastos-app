@@ -82,6 +82,7 @@ export const GroupPage = () => {
       setShowExpenseForm(false)
     } catch (error) {
       if (error instanceof ExpenseError) alert(error.message)
+      else alert(error)
     }
   }
 

@@ -1,6 +1,6 @@
 import { Debt } from 'modules/debt/domain/Debt'
 import { Expense } from 'modules/expense/domain/Expense'
-import { Group, GroupAlreadyExists, addExpenseToGroup, addMemberToGroup } from 'modules/group/domain/Group'
+import { Group, GroupAlreadyExistsError, addExpenseToGroup, addMemberToGroup } from 'modules/group/domain/Group'
 import { GroupRepository } from 'modules/group/domain/Group.repository'
 import { User } from 'modules/user/domain/User'
 
@@ -8,7 +8,7 @@ export const createStorageGroupRepository = (storage: Storage): GroupRepository 
   return {
     createGroup: async function (id: string): Promise<Group> {
       const groupAlreadyExists = !!(storage.getItem(`group ${id}`) || storage.getItem(`group${id}`)) ?? false
-      if (groupAlreadyExists) throw new GroupAlreadyExists()
+      if (groupAlreadyExists) throw new GroupAlreadyExistsError()
       const emptyGroup: Group = {
         id: `${id}`,
         expenseList: new Set(),

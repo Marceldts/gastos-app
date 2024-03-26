@@ -1,5 +1,5 @@
 import { createGroupCommand } from 'modules/group/application/create/create-group.command'
-import { GroupAlreadyExists, GroupError } from 'modules/group/domain/Group'
+import { GroupAlreadyExistsError, GroupError } from 'modules/group/domain/Group'
 import { createStorageGroupRepository } from 'modules/group/infrastructure/repositories/StorageGroup.repository'
 import { HomePageContext } from 'pages/home/home.context'
 import { useContext, useEffect, useState } from 'react'
@@ -22,7 +22,7 @@ export const CreateGroup = () => {
       navigate(`/group/${groupId}`)
     } catch (error) {
       if (error instanceof GroupError) alert(error.message)
-      if (error instanceof GroupAlreadyExists) handleGroupAlreadyExists()
+      if (error instanceof GroupAlreadyExistsError) handleGroupAlreadyExists()
     }
   }
 
