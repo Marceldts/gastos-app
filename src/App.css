@@ -230,3 +230,7 @@ select {
   text-decoration: none;
   color: var(--color-text-light);
 }
+
+p.no-expenses {
+  padding: 20px;
+}

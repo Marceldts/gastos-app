@@ -19,6 +19,7 @@ export const CreateGroup = () => {
   const createGroup = async () => {
     try {
       await createGroupCommand(repository).execute(groupId)
+      navigate(`/group/${groupId}`)
     } catch (error) {
       if (error instanceof GroupError) alert(error.message)
       if (error instanceof GroupAlreadyExists) handleGroupAlreadyExists()

@@ -12,7 +12,7 @@ export const ExpenseTable = ({ tableData }: ExpenseTableProps) => {
   return (
     <>
       {!!tableData && <CustomTable className="group-table" data={tableData} />}
-      {tableData.body.length === 0 && <p>No hay gastos</p>}
+      {tableData.body.length === 0 && <p className="no-expenses">No hay gastos</p>}
     </>
   )
 }
