@@ -1,6 +1,6 @@
 import { type Page } from '@playwright/test'
 
-export class HomePageObject {
+export class GroupPageObject {
   errorMessage: string = ''
 
   setAlertErrorMessageListener(page: Page) {
@@ -10,8 +10,8 @@ export class HomePageObject {
     })
   }
 
-  async goToHome(page: Page) {
-    await page.goto('http://localhost:3000/')
+  async goToGroupExpensesPage(page: Page) {
+    await page.goto('http://localhost:3000/group/1')
   }
 
   async goToGroupWithExpensesForm(page: Page) {

@@ -1,10 +1,10 @@
 import { test, expect } from '@playwright/test'
-import { HomePageObject } from './group.po'
+import { GroupPageObject } from './group.po'
 
-const homePageObject = new HomePageObject()
+const homePageObject = new GroupPageObject()
 
 test.beforeEach(async ({ page }) => {
-  await homePageObject.goToHome(page)
+  await homePageObject.goToGroupExpensesPage(page)
 })
 
 test.afterEach(async ({ page }) => {
