@@ -11,4 +11,5 @@ export interface GroupRepository {
   addMember(group: Group, member: User): Promise<void>
   getGroupDebts(group: Group): Promise<Debt[]>
   getGroupsIds(): Promise<string[]>
+  deleteGroup(id: string): Promise<void>
 }

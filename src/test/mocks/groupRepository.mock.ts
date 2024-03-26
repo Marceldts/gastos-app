@@ -15,4 +15,5 @@ export const groupRepositoryMock: GroupRepository = {
   addMember: jest.fn(),
   getGroupDebts: jest.fn(),
   getGroupsIds: jest.fn(),
+  deleteGroup: jest.fn(),
 }

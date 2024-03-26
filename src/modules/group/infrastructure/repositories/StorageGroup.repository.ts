@@ -83,5 +83,8 @@ export const createStorageGroupRepository = (storage: Storage): GroupRepository 
       }
       return groupsIds
     },
+    deleteGroup: async function (id: string): Promise<void> {
+      storage.removeItem(`group ${id}`)
+    },
   }
 }
