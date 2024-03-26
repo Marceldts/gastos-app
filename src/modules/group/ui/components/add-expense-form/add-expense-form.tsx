@@ -63,6 +63,7 @@ export const AddExpenseForm = ({ members, handleSubmitForm, handleCancelForm }: 
         <input
           type="number"
           value={expenseFormData.amount}
+          step={0.01}
           onChange={e =>
             setExpenseFormData({
               ...expenseFormData,

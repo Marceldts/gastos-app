@@ -60,17 +60,16 @@ export const createStorageGroupRepository = (storage: Storage): GroupRepository 
 
         debtor.balance = parseFloat((debtor.balance + amount).toFixed(2))
         creditor.balance = parseFloat((creditor.balance - amount).toFixed(2))
-
-        debts.push({
-          debtor,
-          creditor,
-          amount: amountFixed.toString(),
-        })
+        if (amountFixed !== 0)
+          debts.push({
+            debtor,
+            creditor,
+            amount: amountFixed.toString(),
+          })
 
         if (debtor.balance === 0) sortedUsers.shift()
         if (creditor.balance === 0) sortedUsers.pop()
       }
-
       return debts
     },
     getGroupsIds: async function (): Promise<string[]> {
