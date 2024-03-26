@@ -2,10 +2,10 @@ import { Link } from 'react-router-dom'
 
 export const HomeButton = () => {
   return (
-    <button className="home-button">
-      <Link to={'/home'}>
+    <Link to={'/home'}>
+      <button className="home-button">
         <span>Volver a inicio</span>
-      </Link>
-    </button>
+      </button>
+    </Link>
   )
 }
