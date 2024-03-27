@@ -70,6 +70,21 @@ describe('local storage group repository implementation', () => {
       )
     })
 
+    test('saveGroup should save an empty group in local storage if an empty object is passed as a group', async () => {
+      const emptyGroup = {} as Group
+
+      await repository.saveGroup(emptyGroup)
+
+      expect(setItemMock).toHaveBeenCalledWith(
+        `group ${emptyGroup.id}`,
+        JSON.stringify({
+          id: '1',
+          expenseList: [],
+          members: [],
+        }),
+      )
+    })
+
     test('saveGroup should reject the promise on error', async () => {
       setItemMock.mockImplementationOnce(() => {
         throw mockedError
